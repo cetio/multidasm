@@ -1,6 +1,7 @@
 module gallinule;
 
-public interface IStager
+// TODO: Stagers should be implemented, providing a way to stage code for runtime rather than comptime assembly.
+interface IStager
 {
     
 }

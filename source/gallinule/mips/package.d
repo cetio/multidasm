@@ -1,4 +1,10 @@
+// MIPS32 integer core assembler; instructions stored big-endian.
+// Scope: integer ALU, load/store, branches, jumps; label resolution in finalize(). MIPS64/FP later.
 module gallinule.mips;
+
+public import gallinule.mips.types;
+import gallinule.mips.encoding;
+import std.typecons;
 
 // https://www.cs.cmu.edu/afs/cs/academic/class/15740-f97/public/doc/mips-isa.pdf
 package:
@@ -38,7 +44,6 @@ enum
     bltzl = 0b00010,
     bne = 0b000101,
     bnel = 0b010101,
-    // break
     brk = 0b001101,
     copz = 0b010000,
     dadd = 0b101100,
@@ -183,36 +188,150 @@ enum
     ftruncw = 0b001101,
 }
 
+struct Block
+{
+package:
+final:
+    ptrdiff_t[string] labels;
+    Tuple!(size_t, string, string, ubyte, ubyte)[] branches;  // pos, label, kind, rs, rt (rt=0 for J-type)
+    ubyte[] buffer;
+
 public:
-enum rzero = 0;
-enum rat = 1;
-enum rv0 = 2;
-enum rv1 = 3;
-enum ra0 = 4;
-enum ra1 = 5;
-enum ra2 = 6;
-enum ra3 = 7;
-enum rt0 = 8;
-enum rt1 = 9;
-enum rt2 = 10;
-enum rt3 = 11;
-enum rt4 = 12;
-enum rt5 = 13;
-enum rt6 = 14;
-enum rt7 = 15;
-enum rs0 = 16;
-enum rs1 = 17;
-enum rs2 = 18;
-enum rs3 = 19;
-enum rs4 = 20;
-enum rs5 = 21;
-enum rs6 = 22;
-enum rs7 = 23;
-enum rt8 = 24;
-enum rt9 = 25;
-enum rk0 = 26;
-enum rk1 = 27;
-enum rgp = 28;
-enum rsp = 29;
-enum rfp = 30;
-enum rra = 31;
+    size_t emit(uint word)
+    {
+        appendWord(buffer, word);
+        return 4;
+    }
+
+    ubyte[] finalize()
+    {
+        foreach (ref br; branches)
+        {
+            immutable pos = br[0];
+            immutable name = br[1];
+            immutable kind = br[2];
+            immutable rs = br[3];
+            immutable rt = br[4];
+            assert(name in labels, "Branch/jump label not defined: "~name);
+            immutable target = labels[name];
+
+            if (kind == "j" || kind == "jal")
+            {
+                immutable target26 = (target >> 2) & 0x3FF_FFFFu;
+                immutable op = (kind == "j") ? .j : .jal;
+                putWord(buffer, pos, jtype(cast(ubyte)op, target26));
+            }
+            else
+            {
+                immutable diff = cast(ptrdiff_t)target - cast(ptrdiff_t)(pos + 4);
+                immutable offsetWords = diff / 4;
+                assert(offsetWords >= -32768 && offsetWords <= 32767, "Branch offset out of range");
+                immutable short imm16 = cast(short)offsetWords;
+                uint w;
+                switch (kind)
+                {
+                    case "beq":  w = itype(cast(ubyte).beq, rs, rt, imm16); break;
+                    case "bne":  w = itype(cast(ubyte).bne, rs, rt, imm16); break;
+                    case "blez": w = itype(cast(ubyte).blez, rs, rt, imm16); break;
+                    case "bgtz": w = itype(cast(ubyte).bgtz, rs, rt, imm16); break;
+                    case "bltz": w = itype(cast(ubyte).regimm, rs, rt, imm16); break;  // rt = .bltz
+                    case "bgez": w = itype(cast(ubyte).regimm, rs, rt, imm16); break;  // rt = .bgez
+                    default: assert(0, "Unknown branch kind: "~kind);
+                }
+                putWord(buffer, pos, w);
+            }
+        }
+        branches = null;
+        return buffer;
+    }
+
+    auto label(string name) => labels[name] = buffer.length;
+
+    mixin(import("instructions/core.d"));
+    mixin(import("instructions/loadstore.d"));
+    mixin(import("instructions/branch.d"));
+    mixin(import("instructions/jump.d"));
+}
+
+// Expected bytes for specific instruction sequences (MIPS32, big-endian).
+unittest
+{
+    import std.string : toLower;
+    import tern.digest;
+
+    Block b1;
+    with (b1) add(rzero, rzero, rzero);
+    assert(b1.finalize().toHexString.toLower == "00000020", "add(rzero,rzero,rzero) expected 00000020");
+
+    Block b2;
+    with (b2) addiu(rat, rzero, 5);
+    assert(b2.finalize().toHexString.toLower == "24010005", "addiu(rat,rzero,5) expected 24010005");
+
+    Block b3;
+    with (b3) lui(rv0, 0x1234);
+    assert(b3.finalize().toHexString.toLower == "3c021234", "lui(rv0,0x1234) expected 3c021234");
+}
+
+// lw rt, offset(base): 0x8c040004 for lw $4,4($0).
+unittest
+{
+    import tern.digest;
+    Block block;
+    with (block) lw(ra0, rzero, 4);
+    auto enc = block.finalize();
+    assert(enc.length == 4 && enc[0] == 0x8c && enc[1] == 0x04 && enc[2] == 0x00 && enc[3] == 0x04,
+        "lw(ra0,rzero,4) expected 8c040004, got "~enc.toHexString);
+}
+
+// beq with label: offset patched to 0 (label immediately after), encoding 0x10000000.
+unittest
+{
+    import tern.digest;
+    Block block;
+    with (block)
+    {
+        beq(rzero, rzero, "x");
+        label("x");
+    }
+    auto enc = block.finalize();
+    assert(enc.length == 4 && enc[0] == 0x10 && enc[1] == 0x00 && enc[2] == 0x00 && enc[3] == 0x00,
+        "beq(rzero,rzero,\"x\")+label(\"x\") expected 10000000, got "~enc.toHexString);
+}
+
+// j(label): J-type patched to target26=1 (address 4 >> 2), encoding 0x08000001.
+unittest
+{
+    import tern.digest;
+    Block block;
+    with (block)
+    {
+        j("there");
+        label("there");
+    }
+    auto enc = block.finalize();
+    assert(enc.length == 4 && enc[0] == 0x08 && enc[1] == 0x00 && enc[2] == 0x00 && enc[3] == 0x01,
+        "j(\"there\")+label(\"there\") expected 08000001, got "~enc.toHexString);
+}
+
+unittest
+{
+    import std.string : toLower;
+    import tern.digest;
+    Block block;
+    with (block)
+    {
+        add(rt1, rs0, rt2);       // 020a4820
+        addiu(rt3, rzero, 10);    // 240b000a
+        lui(rv0, 0x8000);         // 3c028000
+        lw(ra0, rsp, -4);         // 8fa4fffc
+        sw(ra0, rsp, 0);          // afa40000
+        label("loop");
+        beq(ra0, rzero, "loop");  // 1080ffff
+        j("end");                 // 08000007
+        label("end");
+        syscall();                // 0000000c
+    }
+    auto enc = block.finalize();
+    assert(enc.toHexString.toLower == "020a4820240b000a3c0280008fa4fffcafa400001080ffff080000070000000c",
+        "integration: expected full 32-byte sequence, got "~enc.toHexString);
+}

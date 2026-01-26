@@ -10,5 +10,6 @@
 	"license": "AGPL-3.0-only",
 	"name": "gallinule",
     "targetType": "autodetect",
-	"dflags": ["-J./source/gallinule/amd64/"]
+	"dflags": ["-J./source/gallinule/amd64/", "-J./source/gallinule/mips/"],
+	"excludedSourceFiles": ["source/gallinule/amd64/instructions/*", "source/gallinule/mips/instructions/*"]
 }
