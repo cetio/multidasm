@@ -1,8 +1,10 @@
 # Gallinule
 
-[![AMD64 - 79%](https://img.shields.io/badge/AMD64-79%-green)](https://)
-[![MIPS - 27%](https://img.shields.io/badge/MIPS-27%-yellow)](https://)
-[![CIL - 100%](https://img.shields.io/badge/CIL-100%-brightgreen)](https://)
+[![AMD64 - 79%](https://img.shields.io/static/v1?label=AMD64&message=79%&color=green)](https://)
+
+[![MIPS - 27%](https://img.shields.io/static/v1?label=MIPS&message=27%&color=yellow)](https://)
+
+[![CIL - 100%](https://img.shields.io/static/v1?label=CIL&message=100%&color=brightgreen)](https://)
 
 > [!NOTE]
 >
