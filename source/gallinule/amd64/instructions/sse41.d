@@ -59,13 +59,15 @@
     @("r128", "rm128", "imm8")
     auto pinsrd(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 32)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x3a, 0x22, dst, src, imm8);
     @("r128", "rm128", "imm8")
-    auto pinsrq(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 64)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x3a, 0x22, dst, src, imm8);
+    @("r128", "rm64", "imm8")
+    auto pinsrq(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 64)) => emit!(0, FLIP)(0x66, 0x0f, 0x3a, 0x22, dst, src, imm8);
     @("rm8", "r128", "imm8")
     auto pextrb(RM)(RM dst, XMM src, ubyte imm8) if (valid!(RM, 8)) => emit!(0, NO_REX)(0x66, 0x0f, 0x3a, 0x14, dst, src, imm8);
     @("rm32", "r128", "imm8")
     auto pextrd(RM)(RM dst, XMM src, ubyte imm8) if (valid!(RM, 32)) => emit!(0, NO_REX)(0x66, 0x0f, 0x3a, 0x16, dst, src, imm8);
     @("rm64", "r128", "imm8")
-    auto pextrq(RM)(RM dst, XMM src, ubyte imm8) if (valid!(RM, 64)) => emit!(0, NO_REX)(0x66, 0x0f, 0x3a, 0x16, dst, src, imm8);
+    @("rm64", "r128", "imm8")
+    auto pextrq(RM)(RM dst, XMM src, ubyte imm8) if (valid!(RM, 64)) => emit!(0, FLIP)(0x66, 0x0f, 0x3a, 0x16, dst, src, imm8);
     @("r128", "rm64")
     auto pmovsxbw(RM)(XMM dst, RM src) if (valid!(RM, 64)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x38, 0x20, dst, src);
     @("r128", "rm64")

@@ -1013,6 +1013,7 @@
     auto cmovng(RM)(R16 dst, RM src) if (valid!(RM, 16)) => emit!0(0x0f, 0x4e, dst, src);
     @("r32", "rm32")
     auto cmovng(RM)(R32 dst, RM src) if (valid!(RM, 32)) => emit!0(0x0f, 0x4e, dst, src);
+    @("r64", "rm64")
     auto cmovng(RM)(R64 dst, RM src) if (valid!(RM, 64)) => emit!0(0x0f, 0x4e, dst, src);
     
     @("r16", "rm16")
@@ -1114,7 +1115,7 @@
     /* ====== HRESET ====== */
 
     @("mimm8")
-    auto hreset(ubyte imm8) => emit!0(0xf3, 0x0f, 0x3a, 0xf0, 0xc0, imm8, eax);
+    auto hreset(ubyte imm8) => emit!0(0xf3, 0x0f, 0x3a, 0xf0, 0xc0, imm8);
 
     /* ====== CET ====== */
     // Shadow stack instruction set.
@@ -1134,18 +1135,18 @@
     auto rdsspq(R64 dst) => emit!1(0xf3, 0x0f, 0x1e, dst);
 
     @("m32", "r32")
-    auto wrssd(Mem!32 dst, R32 src) => emit!0(0xf3, 0x38, 0xf6, dst, src);
+    auto wrssd(Mem!32 dst, R32 src) => emit!0(0xf3, 0x0f, 0x38, 0xf6, dst, src);
     @("m64", "r64")
-    auto wrssq(Mem!64 dst, R64 src) => emit!0(0xf3, 0x38, 0xf6, dst, src);
+    auto wrssq(Mem!64 dst, R64 src) => emit!0(0xf3, 0x0f, 0x38, 0xf6, dst, src);
 
     @("m32", "r32")
-    auto wrussd(Mem!32 dst, R32 src) => emit!1(0x66, 0xf3, 0x38, 0xf5, dst, src);
+    auto wrussd(Mem!32 dst, R32 src) => emit!1(0x66, 0xf3, 0x0f, 0x38, 0xf5, dst, src);
     @("m64", "r64")
-    auto wrussq(Mem!64 dst, R64 src) => emit!1(0x66, 0xf3, 0x38, 0xf5, dst, src);
+    auto wrussq(Mem!64 dst, R64 src) => emit!1(0x66, 0xf3, 0x0f, 0x38, 0xf5, dst, src);
 
     @("m64")
-    auto rstorssp(Mem!64 dst) => emit!5(0xf3, 0x0f, 0x01, dst);
-    auto saveprevssp() => emit!5(0xf3, 0x0f, 0x01, 0xae, edx);
+    auto rstorssp(Mem!64 dst) => emit!1(0xf3, 0x0f, 0x01, dst);
+    auto saveprevssp() => emit!0(0xf3, 0x0f, 0x01, 0xae);
 
     auto endbr32() => emit!0(0xf3, 0x0f, 0x1e, 0xfb);
     auto endbr64() => emit!0(0xf3, 0x0f, 0x1e, 0xfa);
@@ -1254,6 +1255,11 @@
     @("rm16")
     auto sldt(RM)(RM dst) if (valid!(RM, 16)) => emit!0(0x0f, 0x00, dst);
 
+    @("rm16")
+    auto verr(RM)(RM dst) if (valid!(RM, 16)) => emit!4(0x0f, 0x00, dst);
+    @("rm16")
+    auto verw(RM)(RM dst) if (valid!(RM, 16)) => emit!5(0x0f, 0x00, dst);
+
     @("rm32")
     auto lidt(RM)(RM dst) if (valid!(RM, 32)) => emit!3(0x0f, 0x01, dst);
     @("rm64")
@@ -1299,10 +1305,7 @@
     auto movd(RM)(MMX dst, RM src) if (valid!(RM, 32)) => emit!(0, NO_REX | FLIP)(0x0f, 0x6e, dst, src);
     auto movd(RM)(RM dst, MMX src) if (valid!(RM, 32)) => emit!(0, NO_REX | FLIP)(0x0f, 0x7e, dst, src);
 
-    auto movq(RM)(MMX dst, RM src) if (valid!(RM, 64)) => emit!0(0x0f, 0x6e, dst, src);
-    auto movq(RM)(RM dst, MMX src) if (valid!(RM, 64)) => emit!0(0x0f, 0x7e, dst, src);
-
-    /* ====== NO_REX | FLIP ====== */
+    /* ====== SSE/AVX scalar/vector (NO_REX | FLIP) ====== */
 
     auto addpd(RM)(XMM dst, RM src) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x58, dst, src);
     auto addps(RM)(XMM dst, RM src) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x0f, 0x58, dst, src);

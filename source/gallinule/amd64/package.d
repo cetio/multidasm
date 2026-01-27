@@ -111,26 +111,13 @@ public:
                 if (hasRex)
                 {
                     ubyte rex = 0b01000000;
-                    bool rexW = (SELECTOR & NO_REX_W) != 0 ? false : w;
-                    if (rexW) rex |= (1 << 3);
+                    if ((SELECTOR & NO_REX_W) == 0 && w) rex |= (1 << 3);
                     if (r) rex |= (1 << 2);
                     if (x) rex |= (1 << 1);
                     if (b) rex |= (1 << 0);
-                    
                     size_t pos = 0;
-                    foreach (i; 0..5)
-                    {
-                        if (buffer[pos] == 0xf2)
-                            pos++;
-                        else if (buffer[pos] == 0xf3)
-                            pos++;
-                        else if (buffer[pos] == 0xf0)
-                            pos++;
-                        else if (buffer[pos] == 0x66)
-                            pos++;
-                        else if (buffer[pos] == 0x67)
-                            pos++;
-                    }
+                    while (pos < buffer.length && (buffer[pos] == 0x66 || buffer[pos] == 0x67 || buffer[pos] == 0xf0 || buffer[pos] == 0xf2 || buffer[pos] == 0xf3))
+                        pos++;
                     buffer = buffer[0..pos]~rex~buffer[pos..$];
                 }
 
@@ -338,7 +325,6 @@ public:
             "jb1": [0x72],
             "jbe1": [0x76],
             "jc1": [0x72],
-            "jecxz1": [0xE3],
             "jecxz1": [0xE3],
             "jrcxz1": [0xE3],
             "je1": [0x74],

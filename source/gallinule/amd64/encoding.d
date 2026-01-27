@@ -47,8 +47,9 @@ final:
 package ubyte[] generateModRM(ubyte OP, SRC, DST)(SRC src, DST dst)
     if (isInstanceOf!(Mem, SRC) && isInstanceOf!(Reg, DST))
 {
+    // RIP-relative (64-bit): mod=00, r/m=101, then disp32 only.
     if (src.size == 0)
-        return generateModRM!OP(DST(src.register), dst, Mode.Memory)~0x25~(cast(ubyte*)&src.offset)[0..uint.sizeof];
+        return generateModRM!OP(DST(5), dst, Mode.Memory)~(cast(ubyte*)&src.offset)[0..uint.sizeof];
     else
     {
         if (src.offset == 0)
