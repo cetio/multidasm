@@ -212,12 +212,14 @@ public:
                 }
 
                 ubyte[] vex;
-                if (map_select != 1 || r || x || b || MAP == MXOP)
+                // Use 2-byte VEX (0xC5) when: map=1, R=0, X=0, B=0, W=0
+                // Otherwise use 3-byte VEX (0xC4) or XOP (0x8F)
+                if (map_select != 1 || r || x || b)
                 {
                     static if ((SELECTOR & INT) == 0)
                         we = false;
 
-                    vex ~= MAP == MXOP ? 0x8f : 0xc4;
+                    vex ~= 0xc4;
                     vex ~= (cast(ubyte)(((r ? 0 : 1) << 5) | ((x ? 0 : 1) << 6) | ((b ? 0 : 1) << 7))) | (map_select & 0b00011111);
                 }
                 else
@@ -424,8 +426,8 @@ public:
         {
             size_t size;
             auto rel = labels[branch[1]] - branch[0] + abs;
-            bool isRel8 = rel <= ubyte.max && rel >= ubyte.min;
-            bool isRel16 = rel <= ushort.max && rel >= ushort.min;
+            bool isRel8 = rel <= 127 && rel >= -128;
+            bool isRel16 = rel <= 32767 && rel >= -32768;
 
             if (isRel8)
                 size = branchMap[branch[2]~'1'].length + 1;
@@ -446,8 +448,8 @@ public:
 
             branch[0] += abs;
             auto rel = labels[branch[1]] - branch[0];
-            bool isRel8 = rel <= byte.max && rel >= byte.min;
-            bool isRel16 = rel <= short.max && rel >= short.min;
+            bool isRel8 = rel <= 127 && rel >= -128;
+            bool isRel16 = rel <= 32767 && rel >= -32768;
 
             buffer ~= branchMap[branch[2]~(isRel8 ? '1' : isRel16 ? '2' : '4')];
 

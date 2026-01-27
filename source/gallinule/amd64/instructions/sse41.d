@@ -66,7 +66,6 @@
     @("rm32", "r128", "imm8")
     auto pextrd(RM)(RM dst, XMM src, ubyte imm8) if (valid!(RM, 32)) => emit!(0, NO_REX)(0x66, 0x0f, 0x3a, 0x16, dst, src, imm8);
     @("rm64", "r128", "imm8")
-    @("rm64", "r128", "imm8")
     auto pextrq(RM)(RM dst, XMM src, ubyte imm8) if (valid!(RM, 64)) => emit!(0, FLIP)(0x66, 0x0f, 0x3a, 0x16, dst, src, imm8);
     @("r128", "rm64")
     auto pmovsxbw(RM)(XMM dst, RM src) if (valid!(RM, 64)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x38, 0x20, dst, src);

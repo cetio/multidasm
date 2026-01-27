@@ -723,7 +723,7 @@
         else if (src.index == 0)
             emit!(0, ENCODED)(0xdc, 0xf8, dst);
         else
-            assert(0, "Cannot encode 'fadd' with no 'st0' operand!");
+            assert(0, "Cannot encode 'fdiv' with no 'st0' operand!");
     }
     @("st")
     auto fdivp(ST dst) => emit!(0, ENCODED)(0xde, 0xf8, dst);
@@ -743,7 +743,7 @@
         else if (src.index == 0)
             emit!(0, ENCODED)(0xdc, 0xf0, dst);
         else
-            assert(0, "Cannot encode 'fadd' with no 'st0' operand!");
+            assert(0, "Cannot encode 'fdivr' with no 'st0' operand!");
     }
     @("st")
     auto fdivrp(ST dst) => emit!(0, ENCODED)(0xde, 0xf0, dst);
@@ -806,7 +806,7 @@
         else if (src.index == 0)
             emit!(0, ENCODED)(0xdc, 0xc8, dst);
         else
-            assert(0, "Cannot encode 'fadd' with no 'st0' operand!");
+            assert(0, "Cannot encode 'fmul' with no 'st0' operand!");
     }
     @("st")
     auto fmulp(ST dst) => emit!(0, ENCODED)(0xde, 0xc8, dst);
@@ -827,7 +827,7 @@
         else if (src.index == 0)
             emit!(0, ENCODED)(0xdc, 0xe8, dst);
         else
-            assert(0, "Cannot encode 'fadd' with no 'st0' operand!");
+            assert(0, "Cannot encode 'fsub' with no 'st0' operand!");
     }
     @("st")
     auto fsubp(ST dst) => emit!(0, ENCODED)(0xde, 0xe8, dst);
@@ -848,7 +848,7 @@
         else if (src.index == 0)
             emit!(0, ENCODED)(0xdc, 0xe0, dst);
         else
-            assert(0, "Cannot encode 'fadd' with no 'st0' operand!");
+            assert(0, "Cannot encode 'fsubr' with no 'st0' operand!");
     }
     @("st")
     auto fsubrp(ST dst) => emit!(0, ENCODED)(0xde, 0xe0, dst);
@@ -1310,4 +1310,4 @@
     auto addpd(RM)(XMM dst, RM src) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x58, dst, src);
     auto addps(RM)(XMM dst, RM src) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x0f, 0x58, dst, src);
     auto addss(RM)(XMM dst, RM src) if (valid!(RM, 128, 32)) => emit!(0, NO_REX | FLIP)(0xf3, 0x0f, 0x58, dst, src);
-    auto addsd(RM)(XMM dst, RM src) if (valid!(RM, 128, 32)) => emit!(0, NO_REX | FLIP)(0xf2, 0x0f, 0x58, dst, src);
+    auto addsd(RM)(XMM dst, RM src) if (valid!(RM, 128, 64)) => emit!(0, NO_REX | FLIP)(0xf2, 0x0f, 0x58, dst, src);
