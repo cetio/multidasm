@@ -1,14 +1,11 @@
 # Gallinule
 
-[![AMD64 - 79%](https://img.shields.io/static/v1?label=AMD64&message=79%&color=green)](https://)
-
-[![MIPS - 27%](https://img.shields.io/static/v1?label=MIPS&message=27%&color=yellow)](https://)
-
-[![CIL - 100%](https://img.shields.io/static/v1?label=CIL&message=100%&color=brightgreen)](https://)
+[![AMD64 - 79%](https://img.shields.io/static/v1?label=AMD64&message=79%&color=green&style=for-the-badge)](https://)
+[![MIPS - 27%](https://img.shields.io/static/v1?label=MIPS&message=27%&color=yellow&style=for-the-badge)](https://)
+[![CIL - 100%](https://img.shields.io/static/v1?label=CIL&message=100%&color=brightgreen&style=for-the-badge)](https://)
 
 > [!NOTE]
->
-> Gallinule is sporadically worked on, and currently does not have any support for runtime compilation. Eventually, it is planned for staging to be implemented, which would allow for an intermediary between runtime and comptime to allow for runtime compilation.
+> Gallinule currently doesn't support runtime assembling. This is planned for the future.
 
 Gallinule is an incredibly quick, dynamic comptime assembler designed to allow for compiling CIL, x86, x86_64, and MIPS with minimal overhead and maximal throughput.
 
@@ -22,6 +19,20 @@ Available instructions as well as specific examples may be found in per-assemble
 - [MIPS (IV)](MIPS.md)
 - [CIL](CIL.md)
 
+## Roadmap
+
+**Oops, there's no formal roadmap!**
+
+- [X] x86
+- [X] x86_64
+- [ ] AVX-512
+- [X] CIL
+- [X] MIPS IV
+- [ ] ARM
+- [ ] z80
+- [ ] IR
+- [ ] Runtime assembling
+  
 ## License
 
 Gallinule is licensed under the [AGPL-3.0 license](LICENSE.txt).
