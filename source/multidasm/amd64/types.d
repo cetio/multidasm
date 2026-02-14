@@ -1,5 +1,5 @@
-// Types, registers, and constraints for gallinule.amd64
-module gallinule.amd64.types;
+// Types, registers, and constraints for multidasm.amd64
+module multidasm.amd64.types;
 
 import std.traits;
 

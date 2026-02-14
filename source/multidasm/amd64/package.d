@@ -1,8 +1,8 @@
 // Originally based on: https://github.com/philpax/djitt
-module gallinule.amd64;
+module multidasm.amd64;
 
-public import gallinule.amd64.types;
-import gallinule.amd64.encoding;
+public import multidasm.amd64.types;
+import multidasm.amd64.encoding;
 import std.traits;
 import tern.traits : Attributes;
 import std.typecons;

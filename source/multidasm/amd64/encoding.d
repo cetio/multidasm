@@ -1,9 +1,9 @@
-// ModRM, prefixes, and encoding helpers for gallinule.amd64
-module gallinule.amd64.encoding;
+// ModRM, prefixes, and encoding helpers for multidasm.amd64
+module multidasm.amd64.encoding;
 
 import std.bitmanip;
 import std.traits;
-import gallinule.amd64.types;
+import multidasm.amd64.types;
 
 // Used for generating instructions with directly encoded registers.
 enum ENCODED = 1 << 0;

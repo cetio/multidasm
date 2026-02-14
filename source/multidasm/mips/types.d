@@ -1,5 +1,5 @@
-// Types and register aliases for gallinule.mips (MIPS32 integer core; GPR, Mem, rzero–rra).
-module gallinule.mips.types;
+// Types and register aliases for multidasm.mips (MIPS32 integer core; GPR, Mem, rzero–rra).
+module multidasm.mips.types;
 
 /// 5-bit general-purpose register (0–31).
 public struct GPR

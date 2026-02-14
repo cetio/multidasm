@@ -1,7 +1,7 @@
 # MIPS (IV)
 
 ```d
-import gallinule.mips;
+import multidasm.mips;
 
 Block block;
 with (block) {

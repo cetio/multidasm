@@ -1,9 +1,9 @@
 // MIPS32 integer core assembler; instructions stored big-endian.
 // Scope: integer ALU, load/store, branches, jumps; label resolution in finalize(). MIPS64/FP later.
-module gallinule.mips;
+module multidasm.mips;
 
-public import gallinule.mips.types;
-import gallinule.mips.encoding;
+public import multidasm.mips.types;
+import multidasm.mips.encoding;
 import std.typecons;
 
 // https://www.cs.cmu.edu/afs/cs/academic/class/15740-f97/public/doc/mips-isa.pdf

@@ -1,7 +1,7 @@
 # AMD64 (x86(_64))
 
 ```d
-import gallinule.amd64;
+import multidasm.amd64;
 
 Block!true block;  // true == 64-bit
 with (block) {

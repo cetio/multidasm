@@ -8,8 +8,8 @@
 	},
 	"description": "Runtime dynamic assembler for JIT compilation.",
 	"license": "AGPL-3.0-only",
-	"name": "gallinule",
+	"name": "multidasm",
     "targetType": "autodetect",
-	"dflags": ["-J./source/gallinule/amd64/", "-J./source/gallinule/mips/"],
-	"excludedSourceFiles": ["source/gallinule/amd64/instructions/*", "source/gallinule/mips/instructions/*"]
+	"dflags": ["-J./source/multidasm/amd64/", "-J./source/multidasm/mips/"],
+	"excludedSourceFiles": ["source/multidasm/amd64/instructions/*", "source/multidasm/mips/instructions/*"]
 }

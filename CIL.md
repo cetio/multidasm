@@ -1,7 +1,7 @@
 # CIL
 
 ```d
-import gallinule.cil;
+import multidasm.cil;
 
 Block b;
 with (b) {

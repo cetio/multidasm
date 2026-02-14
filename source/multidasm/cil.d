@@ -1,6 +1,6 @@
 // CIL (Common Intermediate Language) assembler; Block-based API (labels, branches patched in finalize).
 // Reference: https://github.com/cetio/cilk/blob/master/cilk/cilk.d
-module gallinule.cil;
+module multidasm.cil;
 
 import std.algorithm;
 import std.array;
