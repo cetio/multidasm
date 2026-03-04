@@ -9,6 +9,8 @@ import std.format;
 import std.string;
 import std.typecons;
 
+private:
+
 immutable ubyte[][string] instructions = [
     "add": [0x58],
     "add.ovf": [0xD6],
@@ -245,6 +247,8 @@ immutable string[string] prefixes = [
     "constrained": "constrained.",
     "readonly": "readonly."
 ];
+
+public:
 
 struct Block
 {
