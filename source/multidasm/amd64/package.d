@@ -670,7 +670,7 @@ unittest
     assert(enc.length > 0);
     // Ensure no erroneous 0x67 before mov-like opcodes that use GPRs.
     bool seen67Bad = false;
-    foreach (i; 0 .. enc.length - 1)
+    foreach (i; 0..enc.length - 1)
         if (enc[i] == 0x67 && enc[i+1] == 0x8b) seen67Bad = true;
     assert(!seen67Bad, "erroneous 0x67 address-size prefix before 8B (mov)");
     debug import std.stdio; writeln(enc.toHexString);

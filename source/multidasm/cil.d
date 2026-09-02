@@ -264,14 +264,14 @@ final:
     {
         buffer ~= pendingPrefix;
         pendingPrefix = null;
-        assert(mnemonic in instructions, "Unknown CIL mnemonic: " ~ mnemonic);
+        assert(mnemonic in instructions, "Unknown CIL mnemonic: "~mnemonic);
         buffer ~= instructions[mnemonic];
         return instructions[mnemonic].length;
     }
 
     void putInt(size_t pos, int value)
     {
-        copy((cast(ubyte*)&value)[0..int.sizeof], buffer[pos .. pos + int.sizeof]);
+        copy((cast(ubyte*)&value)[0..int.sizeof], buffer[pos..pos + int.sizeof]);
     }
 
     void putByte(size_t pos, byte value)
@@ -287,7 +287,7 @@ public:
             immutable pos = br[0];
             immutable name = br[1];
             immutable kind = br[2];
-            assert(name in labels, "Branch label not defined: " ~ name);
+            assert(name in labels, "Branch label not defined: "~name);
             immutable target = labels[name];
             immutable nextInstr = pos + (kind == "rel1" ? 1 : 4);
             immutable offset = cast(int)(target - nextInstr);
@@ -310,7 +310,7 @@ public:
             immutable nextInstr = opcodeStart + 1 + uint.sizeof + n * int.sizeof;
             foreach (i, name; targetNames)
             {
-                assert(name in labels, "Switch target label not defined: " ~ name);
+                assert(name in labels, "Switch target label not defined: "~name);
                 immutable offset = cast(int)(labels[name] - nextInstr);
                 putInt(opcodeStart + 1 + uint.sizeof + i * int.sizeof, offset);
             }
@@ -768,7 +768,7 @@ public:
         size_t n = targetLabels.length;
         uint nVal = cast(uint)n;
         buffer ~= (cast(ubyte*)&nVal)[0..uint.sizeof];
-        foreach (i; 0 .. n)
+        foreach (i; 0..n)
         {
             int placeholder = 0;
             buffer ~= (cast(ubyte*)&placeholder)[0..int.sizeof];
