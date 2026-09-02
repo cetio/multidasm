@@ -427,7 +427,7 @@ public:
             size_t size;
             auto rel = labels[branch[1]] - branch[0] + abs;
             bool isRel8 = rel <= 127 && rel >= -128;
-            bool isRel16 = rel <= 32767 && rel >= -32768;
+            bool isRel16 = rel <= 32_767 && rel >= -32_768;
 
             if (isRel8)
                 size = branchMap[branch[2]~'1'].length + 1;
@@ -449,7 +449,7 @@ public:
             branch[0] += abs;
             auto rel = labels[branch[1]] - branch[0];
             bool isRel8 = rel <= 127 && rel >= -128;
-            bool isRel16 = rel <= 32767 && rel >= -32768;
+            bool isRel16 = rel <= 32_767 && rel >= -32_768;
 
             buffer ~= branchMap[branch[2]~(isRel8 ? '1' : isRel16 ? '2' : '4')];
 

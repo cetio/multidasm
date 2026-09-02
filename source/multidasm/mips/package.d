@@ -225,7 +225,7 @@ public:
             {
                 immutable diff = cast(ptrdiff_t)target - cast(ptrdiff_t)(pos + 4);
                 immutable offsetWords = diff / 4;
-                assert(offsetWords >= -32768 && offsetWords <= 32767, "Branch offset out of range");
+                assert(offsetWords >= -32_768 && offsetWords <= 32_767, "Branch offset out of range");
                 immutable short imm16 = cast(short)offsetWords;
                 uint w;
                 switch (kind)
