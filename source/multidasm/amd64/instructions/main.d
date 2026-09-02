@@ -17,25 +17,6 @@
         return size + 1;
     }
 
-    @("r32", "rm8")
-    auto crc32(RM)(R32 dst, RM src) if (valid!(RM, 8)) => emit!0(0xf2, 0x0f, 0x38, 0xf0, dst, src);
-    @("r32", "rm16")
-    auto crc32(RM)(R32 dst, RM src) if (valid!(RM, 16)) => emit!0(0xf2, 0x0f, 0x38, 0xf1, dst, src);
-    @("r32", "rm32")
-    auto crc32(RM)(R32 dst, RM src) if (valid!(RM, 32)) => emit!0(0xf2, 0x0f, 0x38, 0xf1, dst, src);
-
-    @("r64", "rm8")
-    auto crc32(RM)(R64 dst, RM src) if (valid!(RM, 8)) => emit!0(0xf2, 0x0f, 0x38, 0xf0, dst, src);
-    @("r64", "rm64")
-    auto crc32(RM)(R64 dst, RM src) if (valid!(RM, 64)) => emit!0(0xf2, 0x0f, 0x38, 0xf1, dst, src);
-
-    // literally 1984
-    // Why did I write this comment? What is literally 1984????
-    @("r32", "m512")
-    auto enqcmd(R32 dst, Mem!512 src) => emit!0(0xf2, 0x0f, 0x38, 0xf8, dst, src);
-    @("r64", "m512")
-    auto enqcmd(R64 dst, Mem!512 src) => emit!0(0xf2, 0x0f, 0x38, 0xf8, dst, src);
-
     @("rm8", "r8")
     auto cmpxchg(RM)(RM dst, R8 src) if (valid!(RM, 8)) => emit!0(0x0f, 0xb0, dst, src);
     @("rm16", "r16")
@@ -331,7 +312,6 @@
     auto inc(R32 dst) => emit!(0, ENCODED)(0x40, dst);
 
     auto hlt() => emit!0(0xf4);
-    auto pause() => emit!0(0xf3, 0x90);
     auto swapgs() => emit!0(0x0f, 0x01, 0xf8);
     
     @("prefix")
@@ -905,11 +885,6 @@
         else
             return emit!1(0xc1, dst, imm8);
     }
-
-    @("rm16")
-    auto verr(RM)(RM dst) if (valid!(RM, 16)) => emit!4(0xf0, 0x00, dst);
-    @("rm16")
-    auto verw(RM)(RM dst) if (valid!(RM, 16)) => emit!5(0xf0, 0x00, dst);
 
     @("imm8")
     auto test(ubyte imm8) => emit!0(0xa8, imm8);

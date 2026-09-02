@@ -107,7 +107,7 @@ public:
                         buffer = dst.segment~buffer;
                 }
 
-                static if ((SELECTOR & NO_REX) != 0)
+                static if ((SELECTOR & (NO_REX | NO_REX_W)) != 0)
                 if (hasRex)
                 {
                     ubyte rex = 0b01000000;

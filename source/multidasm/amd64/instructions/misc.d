@@ -140,6 +140,13 @@
     auto idia64() => cpuid(1) + shr(edx, CPUID1_EDX.IA64) + and(edx, 1);
     auto idpbe() => cpuid(1) + shr(edx, CPUID1_EDX.PBE) + and(edx, 1);
 
+    // literally 1984
+    // Why did I write this comment? What is literally 1984????
+    @("r32", "m512")
+    auto enqcmd(R32 dst, Mem!512 src) => emit!0(0xf2, 0x0f, 0x38, 0xf8, dst, src);
+    @("r64", "m512")
+    auto enqcmd(R64 dst, Mem!512 src) => emit!0(0xf2, 0x0f, 0x38, 0xf8, dst, src);
+
     /* ====== 3DNow! ====== */
     // This is an AMD exclusive vector instruction set that uses MM registers.
     // It has been deprecated and sucks, do not use this for any kind of compiler generation.
