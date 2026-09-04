@@ -4,7 +4,7 @@
 	],
 	"copyright": "Copyright © 2024, cet",
 	"description": "Blazingly fast comptime x86, x86_64, CIL, and MIPS assembler.",
-	"license": "AGPL-3.0-only",
+	"license": "Apache-2.0",
 	"name": "multidasm",
     "targetType": "autodetect",
 	"dflags": ["-J./source/multidasm/amd64/", "-J./source/multidasm/mips/"],

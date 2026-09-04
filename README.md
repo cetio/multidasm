@@ -3,7 +3,7 @@
 [![AMD64 - 79%](https://img.shields.io/static/v1?label=AMD64&message=79%&color=green&style=for-the-badge)](https://)
 [![MIPS - 27%](https://img.shields.io/static/v1?label=MIPS&message=27%&color=yellow&style=for-the-badge)](https://)
 [![CIL - 100%](https://img.shields.io/static/v1?label=CIL&message=100%&color=brightgreen&style=for-the-badge)](https://)
-[![License](https://img.shields.io/badge/License-AGPL--3-blue)](LICENSE.txt)
+[![License](https://img.shields.io/badge/License-Apache--2.0-blue)](LICENSE.txt)
 
 > [!NOTE]
 > Multidasm currently doesn't support runtime assembling. This is planned for the future.
@@ -122,4 +122,4 @@ ubyte[] assembled = code.finalize();
 
 ## License
 
-Multidasm is licensed under [AGPL-3.0](LICENSE.txt).
+Multidasm is licensed under [Apache-2.0](LICENSE.txt).
