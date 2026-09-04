@@ -1,9 +1,9 @@
 // ModRM, prefixes, and encoding helpers for multidasm.amd64
 module multidasm.amd64.encoding;
 
-import std.bitmanip;
-import std.traits;
 import multidasm.amd64.types;
+import std.bitmanip : nativeToLittleEndian;
+import std.traits;
 
 // Used for generating instructions with directly encoded registers.
 enum ENCODED = 1 << 0;
@@ -28,28 +28,12 @@ package enum Mode
     Register
 }
 
-package union ModRM
-{
-public:
-final:
-    struct
-    {
-        mixin(bitfields!(
-            ubyte, "src", 3,
-            ubyte, "dst", 3,
-            ubyte, "mod", 2
-        ));
-    }
-    ubyte b;
-    alias b this;
-}
-
 package ubyte[] generateModRM(ubyte OP, SRC, DST)(SRC src, DST dst)
     if (isInstanceOf!(Mem, SRC) && isInstanceOf!(Reg, DST))
 {
     // RIP-relative (64-bit): mod=00, r/m=101, then disp32 only.
     if (src.size == 0)
-        return generateModRM!OP(DST(5), dst, Mode.Memory)~(cast(ubyte*)&src.offset)[0..uint.sizeof];
+        return generateModRM!OP(DST(5), dst, Mode.Memory)~nativeToLittleEndian(src.offset);
     else
     {
         if (src.offset == 0)
@@ -60,7 +44,8 @@ package ubyte[] generateModRM(ubyte OP, SRC, DST)(SRC src, DST dst)
             if (signedOffset >= -128 && signedOffset <= 127)
                 return generateModRM!OP(DST(src.register), dst, Mode.MemoryOffset8)~cast(ubyte)(cast(byte)signedOffset);
             else
-                return generateModRM!OP(DST(src.register), dst, Mode.MemoryOffsetExt)~(cast(ubyte*)&src.offset)[0..uint.sizeof];
+                return generateModRM!OP(DST(src.register), dst, Mode.MemoryOffsetExt)~
+                    nativeToLittleEndian(src.offset);
         }
     }
 }
@@ -68,11 +53,7 @@ package ubyte[] generateModRM(ubyte OP, SRC, DST)(SRC src, DST dst)
 package ubyte[] generateModRM(ubyte OP, SRC, DST)(SRC src, DST dst, Mode mod = Mode.Register)
     if (isInstanceOf!(Reg, SRC) && isInstanceOf!(Reg, DST))
 {
-    ModRM m;
-    m.src = (src.index % 8);
-    m.dst = (dst.index % 8) | OP;
-    m.mod = cast(ubyte)mod;
-    return [m];
+    return [cast(ubyte)((src.index % 8) | (((dst.index % 8) | OP) << 3) | (cast(ubyte)mod << 6))];
 }
 
 package ubyte[] generateModRM(ubyte OP, SRC, DST)(SRC src, DST dst)

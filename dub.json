@@ -3,9 +3,6 @@
 		"cet"
 	],
 	"copyright": "Copyright © 2024, cet",
-	"dependencies": {
-		"tern": "~>0.2.12"
-	},
 	"description": "Blazingly fast comptime x86, x86_64, CIL, and MIPS assembler.",
 	"license": "AGPL-3.0-only",
 	"name": "multidasm",

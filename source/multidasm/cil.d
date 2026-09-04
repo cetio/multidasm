@@ -2,8 +2,8 @@
 // Reference: https://github.com/cetio/cilk/blob/master/cilk/cilk.d
 module multidasm.cil;
 
-import std.algorithm;
 import std.array;
+import std.bitmanip : nativeToLittleEndian;
 import std.conv;
 import std.format;
 import std.string;
@@ -271,7 +271,7 @@ final:
 
     void putInt(size_t pos, int value)
     {
-        copy((cast(ubyte*)&value)[0..int.sizeof], buffer[pos..pos + int.sizeof]);
+        buffer[pos..pos + int.sizeof] = nativeToLittleEndian(value);
     }
 
     void putByte(size_t pos, byte value)
@@ -335,12 +335,12 @@ public:
     size_t addOvfUn() => emitOp("add.ovf.un");
     size_t and_() => emitOp("and");
     size_t arglist() => emitOp("arglist");
-    size_t box(uint token) { emitOp("box"); buffer ~= (cast(ubyte*)&token)[0..uint.sizeof]; return 5; }
+    size_t box(uint token) { emitOp("box"); buffer ~= nativeToLittleEndian(token); return 5; }
     size_t break_() => emitOp("break");
-    size_t call(uint token) { emitOp("call"); buffer ~= (cast(ubyte*)&token)[0..uint.sizeof]; return 5; }
-    size_t calli(ptrdiff_t token) { emitOp("calli"); buffer ~= (cast(ubyte*)&token)[0..ptrdiff_t.sizeof]; return 1 + ptrdiff_t.sizeof; }
-    size_t callvirt(uint token) { emitOp("callvirt"); buffer ~= (cast(ubyte*)&token)[0..uint.sizeof]; return 5; }
-    size_t castclass(uint token) { emitOp("castclass"); buffer ~= (cast(ubyte*)&token)[0..uint.sizeof]; return 5; }
+    size_t call(uint token) { emitOp("call"); buffer ~= nativeToLittleEndian(token); return 5; }
+    size_t calli(ptrdiff_t token) { emitOp("calli"); buffer ~= nativeToLittleEndian(token); return 1 + ptrdiff_t.sizeof; }
+    size_t callvirt(uint token) { emitOp("callvirt"); buffer ~= nativeToLittleEndian(token); return 5; }
+    size_t castclass(uint token) { emitOp("castclass"); buffer ~= nativeToLittleEndian(token); return 5; }
     size_t ceq() => emitOp("ceq");
     size_t cgt() => emitOp("cgt");
     size_t cgtUn() => emitOp("cgt.un");
@@ -380,25 +380,25 @@ public:
     size_t convU2() => emitOp("conv.u2");
     size_t convU4() => emitOp("conv.u4");
     size_t convU8() => emitOp("conv.u8");
-    size_t cpobj(uint token) { emitOp("cpobj"); buffer ~= (cast(ubyte*)&token)[0..uint.sizeof]; return 5; }
+    size_t cpobj(uint token) { emitOp("cpobj"); buffer ~= nativeToLittleEndian(token); return 5; }
     size_t div() => emitOp("div");
     size_t divUn() => emitOp("div.un");
     size_t dup() => emitOp("dup");
     size_t endfault() => emitOp("endfault");
     size_t endfilter() => emitOp("endfilter");
     size_t endfinally() => emitOp("endfinally");
-    size_t initobj(uint token) { emitOp("initobj"); buffer ~= (cast(ubyte*)&token)[0..uint.sizeof]; return 5; }
-    size_t isinst(uint token) { emitOp("isinst"); buffer ~= (cast(ubyte*)&token)[0..uint.sizeof]; return 5; }
-    size_t jmp(uint token) { emitOp("jmp"); buffer ~= (cast(ubyte*)&token)[0..uint.sizeof]; return 5; }
-    size_t ldarg(ushort ix) { emitOp("ldarg"); buffer ~= (cast(ubyte*)&ix)[0..ushort.sizeof]; return 2 + ushort.sizeof; }
+    size_t initobj(uint token) { emitOp("initobj"); buffer ~= nativeToLittleEndian(token); return 5; }
+    size_t isinst(uint token) { emitOp("isinst"); buffer ~= nativeToLittleEndian(token); return 5; }
+    size_t jmp(uint token) { emitOp("jmp"); buffer ~= nativeToLittleEndian(token); return 5; }
+    size_t ldarg(ushort ix) { emitOp("ldarg"); buffer ~= nativeToLittleEndian(ix); return 2 + ushort.sizeof; }
     size_t ldarg0() => emitOp("ldarg.0");
     size_t ldarg1() => emitOp("ldarg.1");
     size_t ldarg2() => emitOp("ldarg.2");
     size_t ldarg3() => emitOp("ldarg.3");
-    size_t ldargS(ubyte ix) { emitOp("ldarg.s"); buffer ~= (cast(ubyte*)&ix)[0..ubyte.sizeof]; return 2; }
-    size_t ldarga(ushort ix) { emitOp("ldarga"); buffer ~= (cast(ubyte*)&ix)[0..ushort.sizeof]; return 2 + ushort.sizeof; }
-    size_t ldargaS(ubyte ix) { emitOp("ldarga.s"); buffer ~= (cast(ubyte*)&ix)[0..ubyte.sizeof]; return 2; }
-    size_t ldcI4(int value) { emitOp("ldc.i4"); buffer ~= (cast(ubyte*)&value)[0..int.sizeof]; return 1 + int.sizeof; }
+    size_t ldargS(ubyte ix) { emitOp("ldarg.s"); buffer ~= nativeToLittleEndian(ix); return 2; }
+    size_t ldarga(ushort ix) { emitOp("ldarga"); buffer ~= nativeToLittleEndian(ix); return 2 + ushort.sizeof; }
+    size_t ldargaS(ubyte ix) { emitOp("ldarga.s"); buffer ~= nativeToLittleEndian(ix); return 2; }
+    size_t ldcI4(int value) { emitOp("ldc.i4"); buffer ~= nativeToLittleEndian(value); return 1 + int.sizeof; }
     size_t ldcI4_0() => emitOp("ldc.i4.0");
     size_t ldcI4_1() => emitOp("ldc.i4.1");
     size_t ldcI4_2() => emitOp("ldc.i4.2");
@@ -409,26 +409,26 @@ public:
     size_t ldcI4_7() => emitOp("ldc.i4.7");
     size_t ldcI4_8() => emitOp("ldc.i4.8");
     size_t ldcI4_M1() => emitOp("ldc.i4.m1");
-    size_t ldcI4_S(byte value) { emitOp("ldc.i4.s"); buffer ~= (cast(ubyte*)&value)[0..byte.sizeof]; return 2; }
-    size_t ldcI8(long value) { emitOp("ldc.i8"); buffer ~= (cast(ubyte*)&value)[0..long.sizeof]; return 1 + long.sizeof; }
-    size_t ldcR4(float value) { emitOp("ldc.r4"); buffer ~= (cast(ubyte*)&value)[0..float.sizeof]; return 1 + float.sizeof; }
-    size_t ldcR8(double value) { emitOp("ldc.r8"); buffer ~= (cast(ubyte*)&value)[0..double.sizeof]; return 1 + double.sizeof; }
-    size_t ldelem(uint token) { emitOp("ldelem"); buffer ~= (cast(ubyte*)&token)[0..uint.sizeof]; return 5; }
-    size_t ldelemI(uint token) { emitOp("ldelem.i"); buffer ~= (cast(ubyte*)&token)[0..uint.sizeof]; return 5; }
+    size_t ldcI4_S(byte value) { emitOp("ldc.i4.s"); buffer ~= nativeToLittleEndian(value); return 2; }
+    size_t ldcI8(long value) { emitOp("ldc.i8"); buffer ~= nativeToLittleEndian(value); return 1 + long.sizeof; }
+    size_t ldcR4(float value) { emitOp("ldc.r4"); buffer ~= nativeToLittleEndian(value); return 1 + float.sizeof; }
+    size_t ldcR8(double value) { emitOp("ldc.r8"); buffer ~= nativeToLittleEndian(value); return 1 + double.sizeof; }
+    size_t ldelem(uint token) { emitOp("ldelem"); buffer ~= nativeToLittleEndian(token); return 5; }
+    size_t ldelemI(uint token) { emitOp("ldelem.i"); buffer ~= nativeToLittleEndian(token); return 5; }
     size_t ldelemI1() => emitOp("ldelem.i1");
     size_t ldelemI2() => emitOp("ldelem.i2");
     size_t ldelemI4() => emitOp("ldelem.i4");
     size_t ldelemI8() => emitOp("ldelem.i8");
     size_t ldelemR4() => emitOp("ldelem.r4");
     size_t ldelemR8() => emitOp("ldelem.r8");
-    size_t ldelemRef(uint token) { emitOp("ldelem.ref"); buffer ~= (cast(ubyte*)&token)[0..uint.sizeof]; return 5; }
+    size_t ldelemRef(uint token) { emitOp("ldelem.ref"); buffer ~= nativeToLittleEndian(token); return 5; }
     size_t ldelemU1() => emitOp("ldelem.u1");
     size_t ldelemU2() => emitOp("ldelem.u2");
     size_t ldelemU4() => emitOp("ldelem.u4");
-    size_t ldelema(uint token) { emitOp("ldelema"); buffer ~= (cast(ubyte*)&token)[0..uint.sizeof]; return 5; }
-    size_t ldfld(uint token) { emitOp("ldfld"); buffer ~= (cast(ubyte*)&token)[0..uint.sizeof]; return 5; }
-    size_t ldflda(uint token) { emitOp("ldflda"); buffer ~= (cast(ubyte*)&token)[0..uint.sizeof]; return 5; }
-    size_t ldftn(uint token) { emitOp("ldftn"); buffer ~= (cast(ubyte*)&token)[0..uint.sizeof]; return 5; }
+    size_t ldelema(uint token) { emitOp("ldelema"); buffer ~= nativeToLittleEndian(token); return 5; }
+    size_t ldfld(uint token) { emitOp("ldfld"); buffer ~= nativeToLittleEndian(token); return 5; }
+    size_t ldflda(uint token) { emitOp("ldflda"); buffer ~= nativeToLittleEndian(token); return 5; }
+    size_t ldftn(uint token) { emitOp("ldftn"); buffer ~= nativeToLittleEndian(token); return 5; }
     size_t ldindI() => emitOp("ldind.i");
     size_t ldindI1() => emitOp("ldind.i1");
     size_t ldindI2() => emitOp("ldind.i2");
@@ -441,35 +441,35 @@ public:
     size_t ldindU2() => emitOp("ldind.u2");
     size_t ldindU4() => emitOp("ldind.u4");
     size_t ldlen() => emitOp("ldlen");
-    size_t ldloc(ushort ix) { emitOp("ldloc"); buffer ~= (cast(ubyte*)&ix)[0..ushort.sizeof]; return 2 + ushort.sizeof; }
+    size_t ldloc(ushort ix) { emitOp("ldloc"); buffer ~= nativeToLittleEndian(ix); return 2 + ushort.sizeof; }
     size_t ldloc0() => emitOp("ldloc.0");
     size_t ldloc1() => emitOp("ldloc.1");
     size_t ldloc2() => emitOp("ldloc.2");
     size_t ldloc3() => emitOp("ldloc.3");
-    size_t ldlocS(ubyte ix) { emitOp("ldloc.s"); buffer ~= (cast(ubyte*)&ix)[0..ubyte.sizeof]; return 2; }
-    size_t ldloca(ushort ix) { emitOp("ldloca"); buffer ~= (cast(ubyte*)&ix)[0..ushort.sizeof]; return 2 + ushort.sizeof; }
-    size_t ldlocaS(ubyte ix) { emitOp("ldloca.s"); buffer ~= (cast(ubyte*)&ix)[0..ubyte.sizeof]; return 2; }
+    size_t ldlocS(ubyte ix) { emitOp("ldloc.s"); buffer ~= nativeToLittleEndian(ix); return 2; }
+    size_t ldloca(ushort ix) { emitOp("ldloca"); buffer ~= nativeToLittleEndian(ix); return 2 + ushort.sizeof; }
+    size_t ldlocaS(ubyte ix) { emitOp("ldloca.s"); buffer ~= nativeToLittleEndian(ix); return 2; }
     size_t ldnull() => emitOp("ldnull");
-    size_t ldobj(uint token) { emitOp("ldobj"); buffer ~= (cast(ubyte*)&token)[0..uint.sizeof]; return 5; }
-    size_t ldsfld(uint token) { emitOp("ldsfld"); buffer ~= (cast(ubyte*)&token)[0..uint.sizeof]; return 5; }
-    size_t ldsflda(uint token) { emitOp("ldsflda"); buffer ~= (cast(ubyte*)&token)[0..uint.sizeof]; return 5; }
-    size_t ldstr(uint token) { emitOp("ldstr"); buffer ~= (cast(ubyte*)&token)[0..uint.sizeof]; return 5; }
-    size_t ldtoken(uint token) { emitOp("ldtoken"); buffer ~= (cast(ubyte*)&token)[0..uint.sizeof]; return 5; }
-    size_t ldvirtftn(uint token) { emitOp("ldvirtftn"); buffer ~= (cast(ubyte*)&token)[0..uint.sizeof]; return 5; }
+    size_t ldobj(uint token) { emitOp("ldobj"); buffer ~= nativeToLittleEndian(token); return 5; }
+    size_t ldsfld(uint token) { emitOp("ldsfld"); buffer ~= nativeToLittleEndian(token); return 5; }
+    size_t ldsflda(uint token) { emitOp("ldsflda"); buffer ~= nativeToLittleEndian(token); return 5; }
+    size_t ldstr(uint token) { emitOp("ldstr"); buffer ~= nativeToLittleEndian(token); return 5; }
+    size_t ldtoken(uint token) { emitOp("ldtoken"); buffer ~= nativeToLittleEndian(token); return 5; }
+    size_t ldvirtftn(uint token) { emitOp("ldvirtftn"); buffer ~= nativeToLittleEndian(token); return 5; }
     size_t localloc() => emitOp("localloc");
-    size_t mkrefany(uint token) { emitOp("mkrefany"); buffer ~= (cast(ubyte*)&token)[0..uint.sizeof]; return 5; }
+    size_t mkrefany(uint token) { emitOp("mkrefany"); buffer ~= nativeToLittleEndian(token); return 5; }
     size_t mul() => emitOp("mul");
     size_t mulOvf() => emitOp("mul.ovf");
     size_t mulOvfUn() => emitOp("mul.ovf.un");
     size_t neg() => emitOp("neg");
-    size_t newarr(uint token) { emitOp("newarr"); buffer ~= (cast(ubyte*)&token)[0..uint.sizeof]; return 5; }
-    size_t newobj(uint token) { emitOp("newobj"); buffer ~= (cast(ubyte*)&token)[0..uint.sizeof]; return 5; }
+    size_t newarr(uint token) { emitOp("newarr"); buffer ~= nativeToLittleEndian(token); return 5; }
+    size_t newobj(uint token) { emitOp("newobj"); buffer ~= nativeToLittleEndian(token); return 5; }
     size_t nop() => emitOp("nop");
     size_t not_() => emitOp("not");
     size_t or_() => emitOp("or");
     size_t pop() => emitOp("pop");
     size_t refanytype() => emitOp("refanytype");
-    size_t refanyval(uint token) { emitOp("refanyval"); buffer ~= (cast(ubyte*)&token)[0..uint.sizeof]; return 5; }
+    size_t refanyval(uint token) { emitOp("refanyval"); buffer ~= nativeToLittleEndian(token); return 5; }
     size_t rem() => emitOp("rem");
     size_t remUn() => emitOp("rem.un");
     size_t ret() => emitOp("ret");
@@ -477,10 +477,10 @@ public:
     size_t shl() => emitOp("shl");
     size_t shr() => emitOp("shr");
     size_t shrUn() => emitOp("shr.un");
-    size_t sizeof_(uint token) { emitOp("sizeof"); buffer ~= (cast(ubyte*)&token)[0..uint.sizeof]; return 5; }
-    size_t starg(ushort ix) { emitOp("starg"); buffer ~= (cast(ubyte*)&ix)[0..ushort.sizeof]; return 2 + ushort.sizeof; }
-    size_t stargS(ubyte ix) { emitOp("starg.s"); buffer ~= (cast(ubyte*)&ix)[0..ubyte.sizeof]; return 2; }
-    size_t stelem(uint token) { emitOp("stelem"); buffer ~= (cast(ubyte*)&token)[0..uint.sizeof]; return 5; }
+    size_t sizeof_(uint token) { emitOp("sizeof"); buffer ~= nativeToLittleEndian(token); return 5; }
+    size_t starg(ushort ix) { emitOp("starg"); buffer ~= nativeToLittleEndian(ix); return 2 + ushort.sizeof; }
+    size_t stargS(ubyte ix) { emitOp("starg.s"); buffer ~= nativeToLittleEndian(ix); return 2; }
+    size_t stelem(uint token) { emitOp("stelem"); buffer ~= nativeToLittleEndian(token); return 5; }
     size_t stelemI() => emitOp("stelem.i");
     size_t stelemI1() => emitOp("stelem.i1");
     size_t stelemI2() => emitOp("stelem.i2");
@@ -488,8 +488,8 @@ public:
     size_t stelemI8() => emitOp("stelem.i8");
     size_t stelemR4() => emitOp("stelem.r4");
     size_t stelemR8() => emitOp("stelem.r8");
-    size_t stelemRef(uint token) { emitOp("stelem.ref"); buffer ~= (cast(ubyte*)&token)[0..uint.sizeof]; return 5; }
-    size_t stfld(uint token) { emitOp("stfld"); buffer ~= (cast(ubyte*)&token)[0..uint.sizeof]; return 5; }
+    size_t stelemRef(uint token) { emitOp("stelem.ref"); buffer ~= nativeToLittleEndian(token); return 5; }
+    size_t stfld(uint token) { emitOp("stfld"); buffer ~= nativeToLittleEndian(token); return 5; }
     size_t stindI() => emitOp("stind.i");
     size_t stindI1() => emitOp("stind.i1");
     size_t stindI2() => emitOp("stind.i2");
@@ -498,20 +498,20 @@ public:
     size_t stindR4() => emitOp("stind.r4");
     size_t stindR8() => emitOp("stind.r8");
     size_t stindRef() => emitOp("stind.ref");
-    size_t stloc(ushort ix) { emitOp("stloc"); buffer ~= (cast(ubyte*)&ix)[0..ushort.sizeof]; return 2 + ushort.sizeof; }
+    size_t stloc(ushort ix) { emitOp("stloc"); buffer ~= nativeToLittleEndian(ix); return 2 + ushort.sizeof; }
     size_t stloc0() => emitOp("stloc.0");
     size_t stloc1() => emitOp("stloc.1");
     size_t stloc2() => emitOp("stloc.2");
     size_t stloc3() => emitOp("stloc.3");
-    size_t stlocS(ubyte ix) { emitOp("stloc.s"); buffer ~= (cast(ubyte*)&ix)[0..ubyte.sizeof]; return 2; }
-    size_t stobj(uint token) { emitOp("stobj"); buffer ~= (cast(ubyte*)&token)[0..uint.sizeof]; return 5; }
-    size_t stsfld(uint token) { emitOp("stsfld"); buffer ~= (cast(ubyte*)&token)[0..uint.sizeof]; return 5; }
+    size_t stlocS(ubyte ix) { emitOp("stloc.s"); buffer ~= nativeToLittleEndian(ix); return 2; }
+    size_t stobj(uint token) { emitOp("stobj"); buffer ~= nativeToLittleEndian(token); return 5; }
+    size_t stsfld(uint token) { emitOp("stsfld"); buffer ~= nativeToLittleEndian(token); return 5; }
     size_t sub() => emitOp("sub");
     size_t subOvf() => emitOp("sub.ovf");
     size_t subOvfUn() => emitOp("sub.ovf.un");
     size_t throw_() => emitOp("throw");
-    size_t unbox(uint token) { emitOp("unbox"); buffer ~= (cast(ubyte*)&token)[0..uint.sizeof]; return 5; }
-    size_t unboxAny(uint token) { emitOp("unbox.any"); buffer ~= (cast(ubyte*)&token)[0..uint.sizeof]; return 5; }
+    size_t unbox(uint token) { emitOp("unbox"); buffer ~= nativeToLittleEndian(token); return 5; }
+    size_t unboxAny(uint token) { emitOp("unbox.any"); buffer ~= nativeToLittleEndian(token); return 5; }
     size_t xor_() => emitOp("xor");
 
     // Branch/jump by label (offset patched in finalize)
@@ -766,52 +766,330 @@ public:
         emitOp("switch");
         size_t opcodeStart = buffer.length - 1;  // opcode is 1 byte
         size_t n = targetLabels.length;
-        uint nVal = cast(uint)n;
-        buffer ~= (cast(ubyte*)&nVal)[0..uint.sizeof];
-        foreach (i; 0..n)
-        {
-            int placeholder = 0;
-            buffer ~= (cast(ubyte*)&placeholder)[0..int.sizeof];
-        }
+        buffer ~= nativeToLittleEndian(cast(uint)n);
+        foreach (_; 0..n)
+            buffer ~= nativeToLittleEndian(0);
+
         switches ~= tuple(opcodeStart, n, targetLabels.dup);
         return 1 + uint.sizeof + n * int.sizeof;
     }
 }
 
-// Smoke: Block API and branch patching
 unittest
 {
-    Block b;
-    with (b)
-    {
-        ldcI4_0();
-        br("end");
-        label("end");
-        ret();
-    }
-    auto enc = b.finalize();
-    assert(enc.length >= 6);
-    assert(enc[0] == 0x16);  // ldc.i4.0
-    assert(enc[1] == 0x38);  // br
-    // offset at enc[2..6] = end - (2+4) = 2 (ret is at 6), so offset = 0
-    assert(enc[6] == 0x2A);  // ret
+    enum encoded = {
+        Block block;
+        with (block)
+        {
+            ldcI4_M1();
+            ldcI4_0();
+            ldcI4_1();
+            ldcI4_2();
+            ldcI4_3();
+            ldcI4_4();
+            ldcI4_5();
+            ldcI4_6();
+            ldcI4_7();
+            ldcI4_8();
+            ldcI4_S(-5);
+            ldcI4(0x12345678);
+            ldcI8(0x0102030405060708);
+            ldcR4(1.5f);
+            ldcR8(-2.25);
+            add();
+            sub();
+            mul();
+            div();
+            divUn();
+            rem();
+            remUn();
+            and_();
+            or_();
+            xor_();
+            shl();
+            shr();
+            shrUn();
+            neg();
+            not_();
+            ret();
+        }
+        return block.finalize();
+    }();
+    enum ubyte[] EXPECTED = [
+        0x15,
+        0x16,
+        0x17,
+        0x18,
+        0x19,
+        0x1a,
+        0x1b,
+        0x1c,
+        0x1d,
+        0x1e,
+        0x1f, 0xfb,
+        0x20, 0x78, 0x56, 0x34, 0x12,
+        0x21, 0x08, 0x07, 0x06, 0x05, 0x04, 0x03, 0x02, 0x01,
+        0x22, 0x00, 0x00, 0xc0, 0x3f,
+        0x23, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xc0,
+        0x58,
+        0x59,
+        0x5a,
+        0x5b,
+        0x5c,
+        0x5d,
+        0x5e,
+        0x5f,
+        0x60,
+        0x61,
+        0x62,
+        0x63,
+        0x64,
+        0x65,
+        0x66,
+        0x2a
+    ];
+    static assert(encoded == EXPECTED);
 }
 
 unittest
 {
-    Block b;
-    with (b)
-    {
-        ldcI4_1();
-        brtrueS("l");
-        ldcI4_0();
-        label("l");
-        ret();
-    }
-    auto enc = b.finalize();
-    assert(enc.length >= 5);
-    assert(enc[0] == 0x17);  // ldc.i4.1
-    assert(enc[1] == 0x2D);  // brtrue.s
-    assert(enc[3] == 0x16);  // ldc.i4.0
-    assert(enc[4] == 0x2A);  // ret
+    enum encoded = {
+        Block block;
+        with (block)
+        {
+            ldarg(300);
+            ldargS(7);
+            ldarg0();
+            ldarg1();
+            ldarg2();
+            ldarg3();
+            ldarga(301);
+            ldargaS(8);
+            starg(302);
+            stargS(9);
+            ldloc(303);
+            ldlocS(10);
+            ldloc0();
+            ldloc1();
+            ldloc2();
+            ldloc3();
+            ldloca(304);
+            ldlocaS(11);
+            stloc(305);
+            stlocS(12);
+            stloc0();
+            stloc1();
+            stloc2();
+            stloc3();
+            ret();
+        }
+        return block.finalize();
+    }();
+    enum ubyte[] EXPECTED = [
+        0xfe, 0x09, 0x2c, 0x01, 0x00,
+        0x0e, 0x07,
+        0x02,
+        0x03,
+        0x04,
+        0x05,
+        0xfe, 0x0a, 0x2d, 0x01, 0x00,
+        0x0f, 0x08,
+        0xfe, 0x0b, 0x2e, 0x01, 0x00,
+        0x10, 0x09,
+        0xfe, 0x0c, 0x2f, 0x01, 0x00,
+        0x11, 0x0a,
+        0x06,
+        0x07,
+        0x08,
+        0x09,
+        0xfe, 0x0d, 0x30, 0x01, 0x00,
+        0x12, 0x0b,
+        0xfe, 0x0e, 0x31, 0x01, 0x00,
+        0x13, 0x0c,
+        0x0a,
+        0x0b,
+        0x0c,
+        0x0d,
+        0x2a
+    ];
+    static assert(encoded == EXPECTED);
+}
+
+unittest
+{
+    enum encoded = {
+        Block block;
+        with (block)
+        {
+            ldnull();
+            box(0x01000002);
+            unboxAny(0x01000002);
+            newarr(0x01000003);
+            ldtoken(0x01000004);
+            ldstr(0x70000005);
+            call(0x0a000001);
+            ret();
+        }
+        return block.finalize();
+    }();
+    enum ubyte[] EXPECTED = [
+        0x14,
+        0x8c, 0x02, 0x00, 0x00, 0x01,
+        0xa5, 0x02, 0x00, 0x00, 0x01,
+        0x8d, 0x03, 0x00, 0x00, 0x01,
+        0xd0, 0x04, 0x00, 0x00, 0x01,
+        0x72, 0x05, 0x00, 0x00, 0x70,
+        0x28, 0x01, 0x00, 0x00, 0x0a,
+        0x2a
+    ];
+    static assert(encoded == EXPECTED);
+}
+
+unittest
+{
+    enum encoded = {
+        Block block;
+        with (block)
+        {
+            beqS("beq");
+            label("beq");
+            bgeS("bge");
+            label("bge");
+            bgeUnS("bgeUn");
+            label("bgeUn");
+            bgtS("bgt");
+            label("bgt");
+            bgtUnS("bgtUn");
+            label("bgtUn");
+            bleS("ble");
+            label("ble");
+            bleUnS("bleUn");
+            label("bleUn");
+            bltS("blt");
+            label("blt");
+            bltUnS("bltUn");
+            label("bltUn");
+            bneUnS("bneUn");
+            label("bneUn");
+            brS("br");
+            label("br");
+            brfalseS("brfalse");
+            label("brfalse");
+            brtrueS("brtrue");
+            label("brtrue");
+            leaveS("leave");
+            label("leave");
+            ret();
+        }
+        return block.finalize();
+    }();
+    enum ubyte[] EXPECTED = [
+        0x2e, 0x00,
+        0x2f, 0x00,
+        0x34, 0x00,
+        0x30, 0x00,
+        0x35, 0x00,
+        0x31, 0x00,
+        0x36, 0x00,
+        0x32, 0x00,
+        0x37, 0x00,
+        0x33, 0x00,
+        0x2b, 0x00,
+        0x2c, 0x00,
+        0x2d, 0x00,
+        0xde, 0x00,
+        0x2a
+    ];
+    static assert(encoded == EXPECTED);
+}
+
+unittest
+{
+    enum encoded = {
+        Block block;
+        with (block)
+        {
+            beq("beq");
+            label("beq");
+            bge("bge");
+            label("bge");
+            bgeUn("bgeUn");
+            label("bgeUn");
+            bgt("bgt");
+            label("bgt");
+            bgtUn("bgtUn");
+            label("bgtUn");
+            ble("ble");
+            label("ble");
+            bleUn("bleUn");
+            label("bleUn");
+            blt("blt");
+            label("blt");
+            bltUn("bltUn");
+            label("bltUn");
+            bneUn("bneUn");
+            label("bneUn");
+            br("br");
+            label("br");
+            brfalse("brfalse");
+            label("brfalse");
+            brtrue("brtrue");
+            label("brtrue");
+            leave("leave");
+            label("leave");
+            ret();
+        }
+        return block.finalize();
+    }();
+    enum ubyte[] EXPECTED = [
+        0x3b, 0x00, 0x00, 0x00, 0x00,
+        0x3c, 0x00, 0x00, 0x00, 0x00,
+        0x41, 0x00, 0x00, 0x00, 0x00,
+        0x3d, 0x00, 0x00, 0x00, 0x00,
+        0x42, 0x00, 0x00, 0x00, 0x00,
+        0x3e, 0x00, 0x00, 0x00, 0x00,
+        0x43, 0x00, 0x00, 0x00, 0x00,
+        0x3f, 0x00, 0x00, 0x00, 0x00,
+        0x44, 0x00, 0x00, 0x00, 0x00,
+        0x40, 0x00, 0x00, 0x00, 0x00,
+        0x38, 0x00, 0x00, 0x00, 0x00,
+        0x39, 0x00, 0x00, 0x00, 0x00,
+        0x3a, 0x00, 0x00, 0x00, 0x00,
+        0xdd, 0x00, 0x00, 0x00, 0x00,
+        0x2a
+    ];
+    static assert(encoded == EXPECTED);
+}
+
+unittest
+{
+    enum encoded = {
+        Block block;
+        with (block)
+        {
+            switch_(["case0", "case1", "case2"]);
+            label("case0");
+            label("case1");
+            label("case2");
+            volatile_();
+            ldindI4();
+            readonly_();
+            ldelema(0x01000002);
+            tail_();
+            call(0x0a000001);
+            ret();
+        }
+        return block.finalize();
+    }();
+    enum ubyte[] EXPECTED = [
+        0x45, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0xfe, 0x13,
+        0x4a,
+        0xfe, 0x1e,
+        0x8f, 0x02, 0x00, 0x00, 0x01,
+        0xfe, 0x14,
+        0x28, 0x01, 0x00, 0x00, 0x0a,
+        0x2a
+    ];
+    static assert(encoded == EXPECTED);
 }

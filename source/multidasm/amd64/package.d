@@ -3,11 +3,9 @@ module multidasm.amd64;
 
 public import multidasm.amd64.types;
 import multidasm.amd64.encoding;
+import std.bitmanip : nativeToLittleEndian;
 import std.traits;
-import tern.traits : Attributes;
 import std.typecons;
-import tern.algorithm;
-import tern.state;
 
 struct Block(bool X64)
 {
@@ -249,7 +247,7 @@ public:
                 static if (is(typeof(arg) == int))
                     buffer ~= cast(ubyte)arg;
                 else static if (isScalarType!(typeof(arg)))
-                    buffer ~= (cast(ubyte*)&arg)[0..typeof(arg).sizeof];
+                    buffer ~= nativeToLittleEndian(arg);
                 else static if (is(typeof(arg) == ubyte[]))
                     buffer ~= arg;
                 else static if ((SELECTOR & ENCODED) != 0 && isInstanceOf!(Reg, typeof(arg)))
@@ -456,9 +454,9 @@ public:
             if (isRel8)
                 buffer ~= cast(ubyte)rel;
             else if (isRel16)
-                buffer ~= (cast(ubyte*)&rel)[0..2];
+                buffer ~= nativeToLittleEndian(rel)[0..2];
             else
-                buffer ~= (cast(ubyte*)&rel)[0..4];
+                buffer ~= nativeToLittleEndian(rel)[0..4];
 
             abs += buffer.length;
             this.buffer = this.buffer[0..branch[0]]~buffer~this.buffer[branch[0]..$];
@@ -498,180 +496,207 @@ public:
     Mem!512 zmmwordPtr(ARGS...)(ARGS args) => Mem!512(args);
 }
 
-// Expected bytes for specific instruction sequences (x86_64).
 unittest
 {
-    import std.string : toLower;
-    import tern.digest;
+    enum encoded = {
+        Block!true block;
+        with (block)
+        {
+            push(rcx);
+            pop(rbx);
+            mov(eax, ecx);
+            movsxd(rcx, eax);
+            mov(ebx, 1);
+            add(eax, ebx);
+            sub(rdi, 10);
+            test(al, bl);
+            inc(eax);
+            dec(rax);
+        }
+        return block.finalize();
+    }();
 
-    // push r64 / pop r64 must not emit REX.W (opcode 50+rd / 58+rd are already 64-bit).
-    Block!true b1;
-    with (b1) { push(rcx); }
-    assert(b1.finalize().toHexString.toLower == "51", "push(rcx) expected 51");
-    Block!true b2;
-    with (b2) { pop(rbx); }
-    assert(b2.finalize().toHexString.toLower == "5b", "pop(rbx) expected 5b");
-    // push r8 / pop r8 need REX.B only (no REX.W).
-    Block!true b3;
-    with (b3) { push(r8); }
-    assert(b3.finalize().toHexString.toLower == "4150", "push(r8) expected 4150");
-    Block!true b4;
-    with (b4) { pop(r8); }
-    assert(b4.finalize().toHexString.toLower == "4158", "pop(r8) expected 4158");
-}
-
-// mov eax, [rbx] in 64-bit must not use 0x67 (address-size; default addressing is 64-bit).
-unittest
-{
-    import tern.digest;
-    Block!true block;
-    with (block) mov(eax, dwordPtr(rbx));
-    auto enc = block.finalize();
-    assert(enc.length >= 2 && enc[0] == 0x8b && enc[1] == 0x03,
-        "mov(eax, dwordPtr(rbx)) expected 8B 03 (no 0x67), got "~enc.toHexString);
-}
-
-// Memory displacement: small offset uses 8-bit displacement.
-unittest
-{
-    import tern.digest;
-    Block!true block;
-    with (block) mov(eax, dwordPtr(rax, 4));
-    auto enc = block.finalize();
-    // [rax+4]: ModRM mod=01, disp8=4. 8B 40 04.
-    assert(enc.length == 3 && enc[0] == 0x8b && enc[1] == 0x40 && enc[2] == 4,
-        "mov(eax, dwordPtr(rax,4)) expected 8B 40 04, got "~enc.toHexString);
-}
-
-// SSE2/SSSE3 vector instructions assemble (movdqa, movdqu, pxor, pshufb).
-unittest
-{
-    Block!true block;
-    with (block)
-    {
-        movdqa(xmm0, xmm1);
-        movdqu(xmm2, xmmwordPtr(rax));
-        pxor(xmm0, xmm1);
-        pshufb(xmm0, xmm1);
-        pshufd(xmm0, xmm1, 0);
-        paddq(xmm0, xmm1);
-    }
-    auto enc = block.finalize();
-    assert(enc.length > 0);
-}
-
-// Smoke: SSE4.1 (pblendw, roundpd, ptest).
-unittest
-{
-    Block!true block;
-    with (block)
-    {
-        pblendw(xmm0, xmm1, 0);
-        roundpd(xmm2, xmm3, 0);
-        ptest(xmm0, xmm1);
-    }
-    auto enc = block.finalize();
-    assert(enc.length > 0);
-}
-
-// Smoke: SSE4.2 (pcmpgtq).
-unittest
-{
-    Block!true block;
-    with (block) pcmpgtq(xmm0, xmm1);
-    auto enc = block.finalize();
-    assert(enc.length > 0);
-}
-
-// Smoke: AVX2 (vpaddb).
-unittest
-{
-    Block!true block;
-    with (block) vpaddb(xmm0, xmm1, xmm2);
-    auto enc = block.finalize();
-    assert(enc.length > 0);
-}
-
-// Smoke: FMA (vfmadd132pd).
-unittest
-{
-    Block!true block;
-    with (block) vfmadd132pd(xmm0, xmm1, xmm2);
-    auto enc = block.finalize();
-    assert(enc.length > 0);
-}
-
-// movq xmm, r64 / movq r64, xmm: legacy (REX.W+66 0F 6E) or VEX (C5 F8 66 0F 6E) are both valid.
-unittest
-{
-    import tern.digest;
-    Block!true block;
-    with (block) movq(xmm0, rax);
-    auto enc = block.finalize();
-    assert(enc.length >= 4);
-    bool legacy = enc.length == 5 && enc[0] == 0x48 && enc[1] == 0x66 && enc[2] == 0x0f && enc[3] == 0x6e;
-    bool vex = enc.length >= 5 && enc[0] == 0xc5 && enc[1] == 0xf8 && enc[2] == 0x66 && enc[3] == 0x0f && enc[4] == 0x6e;
-    assert(legacy || vex, "movq(xmm0, rax) expected legacy or VEX encoding, got "~enc.toHexString);
+    enum ubyte[] EXPECTED = [
+        0x51,
+        0x5b,
+        0x89, 0xc8,
+        0x48, 0x63, 0xc8,
+        0xbb, 0x01, 0x00, 0x00, 0x00,
+        0x01, 0xd8,
+        0x48, 0x83, 0xef, 0x0a,
+        0x84, 0xd8,
+        0xff, 0xc0,
+        0x48, 0xff, 0xc8
+    ];
+    
+    static assert(encoded == EXPECTED);
 }
 
 unittest
 {
-    import tern.digest;
-    Block!true block;
-    with (block)
-    {
-        mov(eax, ecx);
-        movsxd(rcx, eax);
-        mov(ebx, 1);
-        pop(rbx);
-        push(rcx);
-        jl("a");
-    label("a");
-        popf();
-        ret();
-        retf(3);
-        jmp("a");
-        jb("a");
-        setz(al);
-        insb();
-        outal();
-        call(2);
-        lock(add(eax, ebx));
-        xacquire_lock(sub(si, di));
-        movsb();
-        mov(eax, dwordPtr(ebx));
-        mov(eax, dwordPtr(rbx));
-        stc();
-        std();
-        clc();
-        wait();
-        fwait();
-        monitor();
-        lfence();
-        sfence();
-        retf();
-        test(al, bl);
-        hlt();
-        swapgs();
-        inc(eax);
-        dec(rax);
-        dec(rdi);
-        sub(rdi, 10);
-        mul(esi);
-        scasb();
-        cmpsb();
-        pause();
-        iret();
-        mov(esp, dwordPtr(rdx));
-        pop(rsp);
-        mov(rbp, rsp);
-    }
-    auto enc = block.finalize();
-    assert(enc.length > 0);
-    // Ensure no erroneous 0x67 before mov-like opcodes that use GPRs.
-    bool seen67Bad = false;
-    foreach (i; 0..enc.length - 1)
-        if (enc[i] == 0x67 && enc[i+1] == 0x8b) seen67Bad = true;
-    assert(!seen67Bad, "erroneous 0x67 address-size prefix before 8B (mov)");
-    debug import std.stdio; writeln(enc.toHexString);
+    enum encoded = {
+        Block!true block;
+        with (block)
+        {
+            mov(eax, dwordPtr(rbx));
+            mov(dwordPtr(rax, 4), ecx);
+            mov(rdx, qwordPtr(rbp, 32));
+            mov(bytePtr(rsi), al);
+            mov(wordPtr(rdi, 16), dx);
+        }
+        return block.finalize();
+    }();
+
+    enum ubyte[] EXPECTED = [
+        0x8b, 0x03,
+        0x89, 0x48, 0x04,
+        0x48, 0x8b, 0x55, 0x20,
+        0x88, 0x06,
+        0x66, 0x89, 0x57, 0x10
+    ];
+
+    static assert(encoded == EXPECTED);
+}
+
+unittest
+{
+    enum encoded = {
+        Block!true block;
+        with (block)
+        {
+            lock(add(dwordPtr(rax), ebx));
+            xacquire_lock(sub(dwordPtr(rdi), esi));
+            xrelease(mov(dwordPtr(rdx), ecx));
+            stc();
+            std();
+            clc();
+            wait();
+            fwait();
+            hlt();
+            swapgs();
+            monitor();
+            lfence();
+            sfence();
+            pause();
+            movsb();
+            cmpsb();
+            scasb();
+            insb();
+            outal(128);
+            outal();
+        }
+        return block.finalize();
+    }();
+
+    enum ubyte[] EXPECTED = [
+        0xf0, 0x01, 0x18,
+        0xf2, 0xf0, 0x29, 0x37,
+        0xf3, 0x89, 0x0a,
+        0xf9,
+        0xfd,
+        0xf8,
+        0x9b,
+        0x9b,
+        0xf4,
+        0x0f, 0x01, 0xf8,
+        0x0f, 0x01, 0xc8,
+        0x0f, 0xae, 0xe8,
+        0x0f, 0xae, 0xf8,
+        0xf3, 0x90,
+        0xa4,
+        0xa6,
+        0xae,
+        0x6c,
+        0xe6, 0x80,
+        0xee
+    ];
+
+    static assert(encoded == EXPECTED);
+}
+
+unittest
+{
+    enum encoded = {
+        Block!true block;
+        with (block)
+        {
+            label("start");
+            inc(eax);
+            jne("forward");
+            dec(eax);
+            label("forward");
+            loop("start");
+            jmp("done");
+            label("done");
+            ret();
+        }
+        return block.finalize();
+    }();
+
+    enum ubyte[] EXPECTED = [
+        0xff, 0xc0,
+        0x75, 0x02,
+        0xff, 0xc8,
+        0xe2, 0xf8,
+        0xeb, 0x00,
+        0xc3
+    ];
+
+    static assert(encoded == EXPECTED);
+}
+
+unittest
+{
+    enum encoded = {
+        Block!true block;
+        with (block)
+        {
+            movdqa(xmm0, xmm1);
+            movdqu(xmm2, xmmwordPtr(rax));
+            pxor(xmm0, xmm1);
+            pshufb(xmm0, xmm1);
+            pshufd(xmm0, xmm1, 0);
+            paddq(xmm0, xmm1);
+            pblendw(xmm0, xmm1, 0);
+            roundpd(xmm2, xmm3, 0);
+            ptest(xmm0, xmm1);
+            pcmpgtq(xmm0, xmm1);
+        }
+        return block.finalize();
+    }();
+
+    enum ubyte[] EXPECTED = [
+        0x66, 0x0f, 0x6f, 0xc1,
+        0xf3, 0x0f, 0x6f, 0x10,
+        0x66, 0x0f, 0xef, 0xc1,
+        0x66, 0x0f, 0x38, 0x00, 0xc1,
+        0x66, 0x0f, 0x70, 0xc1, 0x00,
+        0x66, 0x0f, 0xd4, 0xc1,
+        0x66, 0x0f, 0x3a, 0x0e, 0xc1, 0x00,
+        0x66, 0x0f, 0x3a, 0x09, 0xd3, 0x00,
+        0x66, 0x0f, 0x38, 0x17, 0xc1,
+        0x66, 0x0f, 0x38, 0x37, 0xc1
+    ];
+
+    static assert(encoded == EXPECTED);
+}
+
+unittest
+{
+    enum encoded = {
+        Block!true block;
+        with (block)
+        {
+            vpaddb(xmm0, xmm1, xmm2);
+            vfmadd132pd(xmm3, xmm4, xmm5);
+        }
+        return block.finalize();
+    }();
+
+    enum ubyte[] EXPECTED = [
+        0xc5, 0xf1, 0xfc, 0xc2,
+        0xc4, 0xe2, 0xd9, 0x98, 0xdd
+    ];
+
+    static assert(encoded == EXPECTED);
 }
