@@ -1,8 +1,10 @@
 # Multidasm
 
 [![AMD64 - 79%](https://img.shields.io/static/v1?label=AMD64&message=79%&color=green&style=for-the-badge)](https://)
-[![MIPS - 27%](https://img.shields.io/static/v1?label=MIPS&message=27%&color=yellow&style=for-the-badge)](https://)
+[![MIPS - 27%](https://img.shields.io/static/v1?label=MIPS&message=27%&color=orange&style=for-the-badge)](https://)
 [![CIL - 100%](https://img.shields.io/static/v1?label=CIL&message=100%&color=brightgreen&style=for-the-badge)](https://)
+
+
 [![License](https://img.shields.io/badge/License-Apache--2.0-blue)](LICENSE.txt)
 
 > [!NOTE]
