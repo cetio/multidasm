@@ -22,9 +22,9 @@ Multidasm is a quick, dynamic comptime assembler for D. It targets CIL, x86, x86
 
 Per-assembler documentation:
 
-- [AMD64](AMD64.md) - Register and memory operands, REX/VEX prefixes, instruction encoding.
-- [MIPS](MIPS.md) - GPRs, I-type/J-type/R-type encoding, branch and jump label patching.
-- [CIL](CIL.md) - Stack-based opcodes, branch labels, prefixes, metadata tokens.
+- [AMD64](docs/AMD64.md) - Register and memory operands, REX/VEX prefixes, instruction encoding.
+- [MIPS](docs/MIPS.md) - GPRs, I-type/J-type/R-type encoding, branch and jump label patching.
+- [CIL](docs/CIL.md) - Stack-based opcodes, branch labels, prefixes, metadata tokens.
 
 ## Installation
 
