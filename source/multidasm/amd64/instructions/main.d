@@ -58,13 +58,13 @@
     auto add(RM)(RM dst, ubyte imm8) if (valid!(RM, 64)) => emit!0(0x83, dst, imm8);
 
     @("rm8", "r8")
-    auto add(RM)(RM dst, R8 src) if (valid!(RM, 8)) => emit!0(0x00, dst, src);
+    auto add(RM)(RM dst, R8 src) if (valid!(RM, 8)) => emit!(0, FLIP)(0x00, dst, src);
     @("rm16", "r16")
-    auto add(RM)(RM dst, R16 src) if (valid!(RM, 16)) => emit!0(0x01, dst, src);
+    auto add(RM)(RM dst, R16 src) if (valid!(RM, 16)) => emit!(0, FLIP)(0x01, dst, src);
     @("rm32", "r32")
-    auto add(RM)(RM dst, R32 src) if (valid!(RM, 32)) => emit!0(0x01, dst, src);
+    auto add(RM)(RM dst, R32 src) if (valid!(RM, 32)) => emit!(0, FLIP)(0x01, dst, src);
     @("rm64", "r64")
-    auto add(RM)(RM dst, R64 src) if (valid!(RM, 64)) => emit!0(0x01, dst, src);
+    auto add(RM)(RM dst, R64 src) if (valid!(RM, 64)) => emit!(0, FLIP)(0x01, dst, src);
 
     @("r8", "m8")
     auto add(R8 dst, Mem!8 src) => emit!0(0x02, dst, src);
@@ -445,13 +445,13 @@
     auto sub(RM)(RM dst, ubyte imm8) if (valid!(RM, 64)) => emit!5(0x83, dst, imm8);
 
     @("rm8", "r8")
-    auto sub(RM)(RM dst, R8 src) if (valid!(RM, 8)) => emit!0(0x28, dst, src);
+    auto sub(RM)(RM dst, R8 src) if (valid!(RM, 8)) => emit!(0, FLIP)(0x28, dst, src);
     @("rm16", "r16")
-    auto sub(RM)(RM dst, R16 src) if (valid!(RM, 16)) => emit!0(0x29, dst, src);
+    auto sub(RM)(RM dst, R16 src) if (valid!(RM, 16)) => emit!(0, FLIP)(0x29, dst, src);
     @("rm32", "r32")
-    auto sub(RM)(RM dst, R32 src) if (valid!(RM, 32)) => emit!0(0x29, dst, src);
+    auto sub(RM)(RM dst, R32 src) if (valid!(RM, 32)) => emit!(0, FLIP)(0x29, dst, src);
     @("rm64", "r64")
-    auto sub(RM)(RM dst, R64 src) if (valid!(RM, 64)) => emit!0(0x29, dst, src);
+    auto sub(RM)(RM dst, R64 src) if (valid!(RM, 64)) => emit!(0, FLIP)(0x29, dst, src);
 
     @("r8", "m8")
     auto sub(R8 dst, Mem!8 src) => emit!0(0x2a, dst, src);
@@ -903,13 +903,13 @@
     auto test(RM)(RM dst, uint imm32) if (valid!(RM, 64)) => emit!0(0xf7, dst, cast(long)imm32);
 
     @("rm8", "r8")
-    auto test(RM)(RM dst, R8 src) if (valid!(RM, 8)) => emit!0(0x84, dst, src);
+    auto test(RM)(RM dst, R8 src) if (valid!(RM, 8)) => emit!(0, FLIP)(0x84, dst, src);
     @("rm16", "r16")
-    auto test(RM)(RM dst, R16 src) if (valid!(RM, 16)) => emit!0(0x85, dst, src);
+    auto test(RM)(RM dst, R16 src) if (valid!(RM, 16)) => emit!(0, FLIP)(0x85, dst, src);
     @("rm32", "r32")
-    auto test(RM)(RM dst, R32 src) if (valid!(RM, 32)) => emit!0(0x85, dst, src);
+    auto test(RM)(RM dst, R32 src) if (valid!(RM, 32)) => emit!(0, FLIP)(0x85, dst, src);
     @("rm64", "r64")
-    auto test(RM)(RM dst, R64 src) if (valid!(RM, 64)) => emit!0(0x85, dst, src);
+    auto test(RM)(RM dst, R64 src) if (valid!(RM, 64)) => emit!(0, FLIP)(0x85, dst, src);
 
     @("m16")
     auto pop(Mem!16 dst) => emit!0(0x8f, dst);
@@ -1081,13 +1081,13 @@
     auto idiv(RM)(RM dst) if (valid!(RM, 64)) => emit!7(0xf7, dst);
 
     @("rm8", "r8")
-    auto mov(RM)(RM dst, R8 src) if (valid!(RM, 8)) => emit!0(0x88, dst, src);
+    auto mov(RM)(RM dst, R8 src) if (valid!(RM, 8)) => emit!(0, FLIP)(0x88, dst, src);
     @("rm16", "r16")
-    auto mov(RM)(RM dst, R16 src) if (valid!(RM, 16)) => emit!0(0x89, dst, src);
+    auto mov(RM)(RM dst, R16 src) if (valid!(RM, 16)) => emit!(0, FLIP)(0x89, dst, src);
     @("rm32", "r32")
-    auto mov(RM)(RM dst, R32 src) if (valid!(RM, 32)) => emit!0(0x89, dst, src);
+    auto mov(RM)(RM dst, R32 src) if (valid!(RM, 32)) => emit!(0, FLIP)(0x89, dst, src);
     @("rm64", "r64")
-    auto mov(RM)(RM dst, R64 src) if (valid!(RM, 64)) => emit!0(0x89, dst, src);
+    auto mov(RM)(RM dst, R64 src) if (valid!(RM, 64)) => emit!(0, FLIP)(0x89, dst, src);
 
     @("r8", "m8")
     auto mov(R8 dst, Mem!8 src) => emit!0(0x8a, dst, src);

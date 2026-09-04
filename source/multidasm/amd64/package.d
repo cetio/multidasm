@@ -11,7 +11,7 @@ struct Block(bool X64)
 {
 package:
 final:
-    ptrdiff_t[string] labels;
+    Tuple!(ptrdiff_t, size_t)[string] labels;
     Tuple!(ptrdiff_t, string, string, bool)[] branches;
     ubyte[] buffer;
 
@@ -54,7 +54,7 @@ public:
                         (isInstanceOf!(Reg, ARGS[INDEX + 1]) || isInstanceOf!(Mem, ARGS[INDEX + 1])) && isRM1!(INDEX + 2);
             }
 
-            static if ((SELECTOR & VEX) == 0)
+            static if ((SELECTOR & VEX_MASK) == 0)
             void generatePrefix(SRC, DST, STOR = int)(SRC src, DST dst, STOR stor = STOR.init)
             {
                 prefixed = true;
@@ -105,7 +105,7 @@ public:
                         buffer = dst.segment~buffer;
                 }
 
-                static if ((SELECTOR & (NO_REX | NO_REX_W)) != 0)
+                static if ((SELECTOR & NO_REX) == 0)
                 if (hasRex)
                 {
                     ubyte rex = 0b01000000;
@@ -136,7 +136,7 @@ public:
                 }
             }
 
-            static if ((SELECTOR & VEX) != 0)
+            static if ((SELECTOR & VEX_MASK) != 0)
             void generatePrefix(SRC, DST, STOR = int)(SRC src, DST dst, STOR stor = STOR.init)
             {
                 prefixed = true;
@@ -259,10 +259,7 @@ public:
                 {
                     auto dst = arg;
                     auto src = Reg!(TemplateArgsOf!(typeof(arg)))(0);
-                    static if ((SELECTOR & FLIP) != 0)
-                        buffer ~= generateModRM!OP(dst, src);
-                    else
-                        buffer ~= generateModRM!OP(src, dst);
+                    buffer ~= generateModRM!OP(dst, src);
                     generatePrefix(src, dst);
                 }
                 else static if (isRM2!i)
@@ -290,10 +287,10 @@ public:
 
             if (!prefixed)
             {
-                static if ((SELECTOR & VEX) != 0)
+                static if ((SELECTOR & VEX_MASK) != 0)
                     generatePrefix(Reg!(typeof(args[0]).sizeof * 128)(0), Reg!(typeof(args[0]).sizeof * 128)(0));
 
-                static if ((SELECTOR & VEX) == 0)
+                static if ((SELECTOR & VEX_MASK) == 0)
                 foreach (i, arg; args)
                 {
                     static if (!is(typeof(arg) == int))
@@ -419,53 +416,79 @@ public:
             "loopne1": [0xe0]
         ];
 
-        size_t abs;
-        size_t calculateBranch(T)(T branch)
+        ubyte[] branchWidths = new ubyte[branches.length];
+        branchWidths[] = 1;
+
+        size_t branchSize(size_t index)
         {
-            size_t size;
-            auto rel = labels[branch[1]] - branch[0] + abs;
-            bool isRel8 = rel <= 127 && rel >= -128;
-            bool isRel16 = rel <= 32_767 && rel >= -32_768;
-
-            if (isRel8)
-                size = branchMap[branch[2]~'1'].length + 1;
-            else if (isRel16)
-                size = branchMap[branch[2]~'2'].length + 2;
-            else
-                size = branchMap[branch[2]~'4'].length + 4;
-
-            return size;
+            immutable string key = branches[index][2]~cast(char)('0' + branchWidths[index]);
+            return branchMap[key].length + branchWidths[index];
         }
 
-        foreach (ref i, branch; branches)
+        ptrdiff_t branchPosition(size_t index)
         {
-            if (i + 1 < branches.length && branches[i + 1][3] && branches[i + 1][0] == branch[0])
-                labels[branch[1]] += calculateBranch(branches[i + 1]);
+            ptrdiff_t ret = branches[index][0];
+            foreach (i; 0..index)
+                ret += branchSize(i);
 
-            ubyte[] buffer;
+            return ret;
+        }
 
-            branch[0] += abs;
-            auto rel = labels[branch[1]] - branch[0];
-            bool isRel8 = rel <= 127 && rel >= -128;
-            bool isRel16 = rel <= 32_767 && rel >= -32_768;
+        ptrdiff_t labelPosition(string name)
+        {
+            ptrdiff_t ret = labels[name][0];
+            foreach (i; 0..labels[name][1])
+                ret += branchSize(i);
 
-            buffer ~= branchMap[branch[2]~(isRel8 ? '1' : isRel16 ? '2' : '4')];
+            return ret;
+        }
 
-            if (isRel8)
-                buffer ~= cast(ubyte)rel;
-            else if (isRel16)
-                buffer ~= nativeToLittleEndian(rel)[0..2];
-            else
-                buffer ~= nativeToLittleEndian(rel)[0..4];
+        bool changed;
+        do
+        {
+            changed = false;
+            foreach (index, branch; branches)
+            {
+                assert(branch[1] in labels, "Branch label not defined: "~branch[1]);
+                immutable ptrdiff_t relative = labelPosition(branch[1]) - branchPosition(index) - branchSize(index);
 
-            abs += buffer.length;
-            this.buffer = this.buffer[0..branch[0]]~buffer~this.buffer[branch[0]..$];
+                if (branchWidths[index] == 1 && (relative < byte.min || relative > byte.max))
+                {
+                    immutable string key = branch[2]~'2';
+                    assert(key in branchMap, "Branch offset out of range: "~branch[2]);
+                    branchWidths[index] = 2;
+                    changed = true;
+                }
+                else if (branchWidths[index] == 2 && (relative < short.min || relative > short.max))
+                {
+                    immutable string key = branch[2]~'4';
+                    assert(key in branchMap, "Branch offset out of range: "~branch[2]);
+                    branchWidths[index] = 4;
+                    changed = true;
+                }
+            }
+        }
+        while (changed);
+
+        size_t inserted;
+        foreach (index, branch; branches)
+        {
+            immutable size_t position = cast(size_t)branch[0] + inserted;
+            immutable ptrdiff_t relative = labelPosition(branch[1]) - cast(ptrdiff_t)position - branchSize(index);
+            immutable string key = branch[2]~cast(char)('0' + branchWidths[index]);
+            ubyte[] encoded = branchMap[key].dup;
+            encoded ~= nativeToLittleEndian(relative)[0..branchWidths[index]];
+            this.buffer = this.buffer[0..position]~encoded~this.buffer[position..$];
+            inserted += encoded.length;
         }
         branches = null;
         return this.buffer;
     }
 
-    auto label(string name) => labels[name] = buffer.length;
+    void label(string name)
+    {
+        labels[name] = tuple(cast(ptrdiff_t)buffer.length, branches.length);
+    }
     
     // These categories are intended to separate instructions based on their corresponding flag,
     // however, they do not accurately reflect this and are more whimsical than logical.

@@ -11,7 +11,8 @@ enum INT = 1 << 6;
 enum NO_REX = 1 << 1;
 enum NO_REX_W = 1 << 7;
 enum FLIP = 1 << 2;
-enum VEX = (1 << 3) | FLIP;
+enum VEX_MASK = 1 << 3;
+enum VEX = VEX_MASK | FLIP;
 enum EVEX = 1 << 4;
 enum MVEX = 1 << 5;
 

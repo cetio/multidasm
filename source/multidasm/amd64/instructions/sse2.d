@@ -15,16 +15,16 @@
     auto movq(R64 dst, XMM src) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x7e, dst, src);
 
     @("r128", "rm128")
-    auto movdqa(RM)(XMM dst, RM src) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x6f, dst, src);
+    auto movdqa(RM)(XMM dst, RM src) if (valid!(RM, 128)) => emit!(0, NO_REX)(0x66, 0x0f, 0x6f, dst, src);
     @("m128", "r128")
     auto movdqa(Mem!128 dst, XMM src) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x7f, dst, src);
     @("r128", "rm128")
-    auto movdqu(RM)(XMM dst, RM src) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0xf3, 0x0f, 0x6f, dst, src);
+    auto movdqu(RM)(XMM dst, RM src) if (valid!(RM, 128)) => emit!(0, NO_REX)(0xf3, 0x0f, 0x6f, dst, src);
     @("m128", "r128")
     auto movdqu(Mem!128 dst, XMM src) => emit!(0, NO_REX | FLIP)(0xf3, 0x0f, 0x7f, dst, src);
 
     @("r128", "rm128")
-    auto pxor(RM)(XMM dst, RM src) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0xef, dst, src);
+    auto pxor(RM)(XMM dst, RM src) if (valid!(RM, 128)) => emit!(0, NO_REX)(0x66, 0x0f, 0xef, dst, src);
     @("r128", "rm128")
     auto pxor(RM)(MMX dst, RM src) if (valid!(RM, 64)) => emit!(0, NO_REX | FLIP)(0x0f, 0xef, dst, src);
     @("r128", "rm128")
@@ -34,7 +34,7 @@
     @("r128", "rm128")
     auto paddd(RM)(XMM dst, RM src) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0xfe, dst, src);
     @("r128", "rm128")
-    auto paddq(RM)(XMM dst, RM src) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0xd4, dst, src);
+    auto paddq(RM)(XMM dst, RM src) if (valid!(RM, 128)) => emit!(0, NO_REX)(0x66, 0x0f, 0xd4, dst, src);
     @("r128", "rm128")
     auto psubb(RM)(XMM dst, RM src) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0xf8, dst, src);
     @("r128", "rm128")
@@ -48,7 +48,7 @@
     @("r128", "rm128")
     auto pmuludq(RM)(XMM dst, RM src) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0xf4, dst, src);
     @("r128", "rm128", "imm8")
-    auto pshufd(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x70, dst, src, imm8);
+    auto pshufd(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 128)) => emit!(0, NO_REX)(0x66, 0x0f, 0x70, dst, src, imm8);
     @("r128", "rm128", "imm8")
     auto pshuflw(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0xf2, 0x0f, 0x70, dst, src, imm8);
     @("r128", "rm128", "imm8")

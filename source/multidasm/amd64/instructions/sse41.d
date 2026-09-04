@@ -7,11 +7,11 @@
     @("r128", "rm128")
     auto blendvps(RM)(XMM dst, RM src) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x38, 0x14, dst, src);
     @("r128", "rm128", "imm8")
-    auto pblendw(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x3a, 0x0e, dst, src, imm8);
+    auto pblendw(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 128)) => emit!(0, NO_REX)(0x66, 0x0f, 0x3a, 0x0e, dst, src, imm8);
     @("r128", "rm128")
     auto pblendvb(RM)(XMM dst, RM src) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x38, 0x10, dst, src);
     @("r128", "rm128", "imm8")
-    auto roundpd(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x3a, 0x09, dst, src, imm8);
+    auto roundpd(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 128)) => emit!(0, NO_REX)(0x66, 0x0f, 0x3a, 0x09, dst, src, imm8);
     @("r128", "rm128", "imm8")
     auto roundps(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x3a, 0x08, dst, src, imm8);
     @("r128", "rm128", "imm8")
@@ -23,7 +23,7 @@
     @("r128", "rm128", "imm8")
     auto insertps(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 128, 32)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x3a, 0x21, dst, src, imm8);
     @("r128", "rm128")
-    auto ptest(RM)(XMM dst, RM src) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x38, 0x17, dst, src);
+    auto ptest(RM)(XMM dst, RM src) if (valid!(RM, 128)) => emit!(0, NO_REX)(0x66, 0x0f, 0x38, 0x17, dst, src);
     @("r128", "rm128")
     auto pmuldq(RM)(XMM dst, RM src) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x38, 0x28, dst, src);
     @("r128", "rm128")

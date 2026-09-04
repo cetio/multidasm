@@ -1,5 +1,5 @@
     @("r128", "rm128")
-    auto pshufb(RM)(XMM dst, RM src) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x38, 0x00, dst, src);
+    auto pshufb(RM)(XMM dst, RM src) if (valid!(RM, 128)) => emit!(0, NO_REX)(0x66, 0x0f, 0x38, 0x00, dst, src);
     @("r128", "rm128", "imm8")
     auto palignr(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x3a, 0x0f, dst, src, imm8);
     @("r128", "rm128")
