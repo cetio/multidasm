@@ -6,7 +6,40 @@
 	"description": "Blazingly fast comptime x86, x86_64, CIL, and MIPS assembler.",
 	"license": "Apache-2.0",
 	"name": "multidasm",
-    "targetType": "autodetect",
+	"targetType": "autodetect",
 	"dflags": ["-J./source/multidasm/amd64/", "-J./source/multidasm/mips/"],
-	"excludedSourceFiles": ["source/multidasm/amd64/instructions/*", "source/multidasm/mips/instructions/*"]
+	"excludedSourceFiles": ["source/multidasm/amd64/instructions/*", "source/multidasm/mips/instructions/*"],
+	"configurations": [
+		{
+			"name": "library",
+			"targetType": "library",
+			"excludedSourceFiles": ["source/multidasm/amd64/instructions/*", "source/multidasm/mips/instructions/*"]
+		},
+		{
+			"name": "test-amd64",
+			"targetType": "library",
+			"excludedSourceFiles": [
+				"source/multidasm/amd64/instructions/*",
+				"source/multidasm/mips/*",
+				"source/multidasm/cil.d"
+			]
+		},
+		{
+			"name": "test-mips",
+			"targetType": "library",
+			"excludedSourceFiles": [
+				"source/multidasm/amd64/*",
+				"source/multidasm/mips/instructions/*",
+				"source/multidasm/cil.d"
+			]
+		},
+		{
+			"name": "test-cil",
+			"targetType": "library",
+			"excludedSourceFiles": [
+				"source/multidasm/amd64/*",
+				"source/multidasm/mips/*"
+			]
+		}
+	]
 }

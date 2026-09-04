@@ -8,12 +8,13 @@ on:
 
 jobs:
   test:
-    name: Test (D ${{ matrix.compiler }})
+    name: ${{ matrix.suite }} (${{ matrix.compiler }})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         compiler: [dmd-latest, ldc-latest]
+        suite: [test-amd64, test-mips, test-cil]
 
     steps:
       - uses: actions/checkout@v4
@@ -23,5 +24,5 @@ jobs:
         with:
           compiler: ${{ matrix.compiler }}
 
-      - name: Run tests
-        run: dub test
+      - name: Run ${{ matrix.suite }} tests
+        run: dub test -c ${{ matrix.suite }}
