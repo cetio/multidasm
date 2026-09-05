@@ -80,4 +80,8 @@
 
     auto syscall() => emit(rtype(.special, 0, 0, 0, 0, .syscall));
     @("code")
-    auto break_(uint code) => emit((cast(uint).special << 26) | ((code & 0xFFFFFu) << 6) | (cast(uint).brk & 63));
+    auto break_(uint code)
+    {
+        assert(code <= 0x3FF, "Break code out of range");
+        return emit((cast(uint).special << 26) | (code << 16) | (cast(uint).brk & 63));
+    }
