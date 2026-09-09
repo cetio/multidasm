@@ -4,8 +4,9 @@
 [![MIPS - 27%](https://img.shields.io/static/v1?label=MIPS&message=27%&color=orange&style=for-the-badge)](https://)
 [![CIL - 100%](https://img.shields.io/static/v1?label=CIL&message=100%&color=brightgreen&style=for-the-badge)](https://)
 
-
 [![License](https://img.shields.io/badge/License-Apache--2.0-blue)](LICENSE.txt)
+[![DUB Package](https://img.shields.io/badge/dub-package-red)](https://code.dlang.org/packages/multidasm)
+[![CI](https://github.com/cet/multidasm/actions/workflows/ci.yml/badge.svg)](https://github.com/cet/multidasm/actions/workflows/ci.yml)
 
 > [!NOTE]
 > Multidasm currently doesn't support runtime assembling. This is planned for the future.
