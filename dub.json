@@ -9,6 +9,7 @@
 	"targetType": "autodetect",
 	"dflags": ["-J./source/multidasm/amd64/", "-J./source/multidasm/mips/"],
 	"excludedSourceFiles": ["source/multidasm/amd64/instructions/*", "source/multidasm/mips/instructions/*"],
+	"targetPath": "bin",
 	"configurations": [
 		{
 			"name": "library",
