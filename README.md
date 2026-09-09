@@ -5,7 +5,7 @@
 [![CIL - 100%](https://img.shields.io/static/v1?label=CIL&message=100%&color=brightgreen&style=for-the-badge)](https://)
 
 [![License](https://img.shields.io/badge/License-Apache--2.0-blue)](LICENSE.txt)
-[![DUB Package](https://img.shields.io/badge/dub-package-red)](https://code.dlang.org/packages/multidasm)
+[![DUB Package](https://img.shields.io/badge/DUB-latest-red)](https://code.dlang.org/packages/multidasm)
 [![CI](https://github.com/cetio/multidasm/actions/workflows/ci.yml/badge.svg)](https://github.com/cetio/multidasm/actions/workflows/ci.yml)
 
 > [!NOTE]
