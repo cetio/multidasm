@@ -338,7 +338,12 @@ public:
     size_t box(uint token) { emitOp("box"); buffer ~= nativeToLittleEndian(token); return 5; }
     size_t break_() => emitOp("break");
     size_t call(uint token) { emitOp("call"); buffer ~= nativeToLittleEndian(token); return 5; }
-    size_t calli(ptrdiff_t token) { emitOp("calli"); buffer ~= nativeToLittleEndian(token); return 1 + ptrdiff_t.sizeof; }
+    size_t calli(ptrdiff_t token)
+    {
+        emitOp("calli");
+        buffer ~= nativeToLittleEndian(token);
+        return 1 + ptrdiff_t.sizeof;
+    }
     size_t callvirt(uint token) { emitOp("callvirt"); buffer ~= nativeToLittleEndian(token); return 5; }
     size_t castclass(uint token) { emitOp("castclass"); buffer ~= nativeToLittleEndian(token); return 5; }
     size_t ceq() => emitOp("ceq");

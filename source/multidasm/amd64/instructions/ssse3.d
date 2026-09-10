@@ -3,7 +3,8 @@
     auto pshufb(RM)(XMM dst, RM src) if (valid!(RM, 128)) => emit!(0, NO_REX)(0x66, 0x0f, 0x38, 0x00, dst, src);
     /// www.felixcloutier.com/x86/palignr
     @("r128", "rm128", "imm8")
-    auto palignr(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x3a, 0x0f, dst, src, imm8);
+    auto palignr(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 128))
+        => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x3a, 0x0f, dst, src, imm8);
     /// www.felixcloutier.com/x86/pabsb:pabsw:pabsd:pabsq
     @("r128", "rm128")
     auto pabsb(RM)(XMM dst, RM src) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x38, 0x1c, dst, src);
@@ -27,7 +28,9 @@
     auto phsubd(RM)(XMM dst, RM src) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x38, 0x06, dst, src);
     /// www.felixcloutier.com/x86/pmaddubsw
     @("r128", "rm128")
-    auto pmaddubsw(RM)(XMM dst, RM src) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x38, 0x04, dst, src);
+    auto pmaddubsw(RM)(XMM dst, RM src) if (valid!(RM, 128))
+        => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x38, 0x04, dst, src);
     /// www.felixcloutier.com/x86/pmulhrsw
     @("r128", "rm128")
-    auto pmulhrsw(RM)(XMM dst, RM src) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x38, 0x0b, dst, src);
+    auto pmulhrsw(RM)(XMM dst, RM src) if (valid!(RM, 128))
+        => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x38, 0x0b, dst, src);

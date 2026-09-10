@@ -1,39 +1,51 @@
     /// www.felixcloutier.com/x86/blendpd
     @("r128", "rm128", "imm8")
-    auto blendpd(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x3a, 0x0d, dst, src, imm8);
+    auto blendpd(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 128))
+        => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x3a, 0x0d, dst, src, imm8);
     /// www.felixcloutier.com/x86/blendps
     @("r128", "rm128", "imm8")
-    auto blendps(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x3a, 0x0c, dst, src, imm8);
+    auto blendps(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 128))
+        => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x3a, 0x0c, dst, src, imm8);
     /// www.felixcloutier.com/x86/blendvpd
     @("r128", "rm128")
-    auto blendvpd(RM)(XMM dst, RM src) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x38, 0x15, dst, src);
+    auto blendvpd(RM)(XMM dst, RM src) if (valid!(RM, 128))
+        => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x38, 0x15, dst, src);
     /// www.felixcloutier.com/x86/blendvps
     @("r128", "rm128")
-    auto blendvps(RM)(XMM dst, RM src) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x38, 0x14, dst, src);
+    auto blendvps(RM)(XMM dst, RM src) if (valid!(RM, 128))
+        => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x38, 0x14, dst, src);
     /// www.felixcloutier.com/x86/pblendw
     @("r128", "rm128", "imm8")
-    auto pblendw(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 128)) => emit!(0, NO_REX)(0x66, 0x0f, 0x3a, 0x0e, dst, src, imm8);
+    auto pblendw(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 128))
+        => emit!(0, NO_REX)(0x66, 0x0f, 0x3a, 0x0e, dst, src, imm8);
     /// www.felixcloutier.com/x86/pblendvb
     @("r128", "rm128")
-    auto pblendvb(RM)(XMM dst, RM src) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x38, 0x10, dst, src);
+    auto pblendvb(RM)(XMM dst, RM src) if (valid!(RM, 128))
+        => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x38, 0x10, dst, src);
     /// www.felixcloutier.com/x86/roundpd
     @("r128", "rm128", "imm8")
-    auto roundpd(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 128)) => emit!(0, NO_REX)(0x66, 0x0f, 0x3a, 0x09, dst, src, imm8);
+    auto roundpd(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 128))
+        => emit!(0, NO_REX)(0x66, 0x0f, 0x3a, 0x09, dst, src, imm8);
     /// www.felixcloutier.com/x86/roundps
     @("r128", "rm128", "imm8")
-    auto roundps(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x3a, 0x08, dst, src, imm8);
+    auto roundps(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 128))
+        => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x3a, 0x08, dst, src, imm8);
     /// www.felixcloutier.com/x86/roundss
     @("r128", "rm128", "imm8")
-    auto roundss(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 128, 32)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x3a, 0x0a, dst, src, imm8);
+    auto roundss(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 128, 32))
+        => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x3a, 0x0a, dst, src, imm8);
     /// www.felixcloutier.com/x86/roundsd
     @("r128", "rm128", "imm8")
-    auto roundsd(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 128, 64)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x3a, 0x0b, dst, src, imm8);
+    auto roundsd(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 128, 64))
+        => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x3a, 0x0b, dst, src, imm8);
     /// www.felixcloutier.com/x86/extractps
     @("rm32", "r128")
-    auto extractps(RM)(RM dst, XMM src, ubyte imm8) if (valid!(RM, 32)) => emit!(0, NO_REX)(0x66, 0x0f, 0x3a, 0x17, dst, src, imm8);
+    auto extractps(RM)(RM dst, XMM src, ubyte imm8) if (valid!(RM, 32))
+        => emit!(0, NO_REX)(0x66, 0x0f, 0x3a, 0x17, dst, src, imm8);
     /// www.felixcloutier.com/x86/insertps
     @("r128", "rm128", "imm8")
-    auto insertps(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 128, 32)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x3a, 0x21, dst, src, imm8);
+    auto insertps(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 128, 32))
+        => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x3a, 0x21, dst, src, imm8);
     /// www.felixcloutier.com/x86/ptest
     @("r128", "rm128")
     auto ptest(RM)(XMM dst, RM src) if (valid!(RM, 128)) => emit!(0, NO_REX)(0x66, 0x0f, 0x38, 0x17, dst, src);
@@ -42,22 +54,28 @@
     auto pmuldq(RM)(XMM dst, RM src) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x38, 0x28, dst, src);
     /// www.felixcloutier.com/x86/packusdw
     @("r128", "rm128")
-    auto packusdw(RM)(XMM dst, RM src) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x38, 0x2b, dst, src);
+    auto packusdw(RM)(XMM dst, RM src) if (valid!(RM, 128))
+        => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x38, 0x2b, dst, src);
     /// www.felixcloutier.com/x86/phminposuw
     @("r128", "rm128")
-    auto phminposuw(RM)(XMM dst, RM src) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x38, 0x41, dst, src);
+    auto phminposuw(RM)(XMM dst, RM src) if (valid!(RM, 128))
+        => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x38, 0x41, dst, src);
     /// www.felixcloutier.com/x86/mpsadbw
     @("r128", "rm128", "imm8")
-    auto mpsadbw(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x3a, 0x42, dst, src, imm8);
+    auto mpsadbw(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 128))
+        => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x3a, 0x42, dst, src, imm8);
     /// www.felixcloutier.com/x86/movntdqa
     @("r128", "rm128")
-    auto movntdqa(RM)(XMM dst, RM src) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x38, 0x2a, dst, src);
+    auto movntdqa(RM)(XMM dst, RM src) if (valid!(RM, 128))
+        => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x38, 0x2a, dst, src);
     /// www.felixcloutier.com/x86/dppd
     @("r128", "rm128", "imm8")
-    auto dppd(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x3a, 0x41, dst, src, imm8);
+    auto dppd(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 128))
+        => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x3a, 0x41, dst, src, imm8);
     /// www.felixcloutier.com/x86/dpps
     @("r128", "rm128", "imm8")
-    auto dpps(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x3a, 0x40, dst, src, imm8);
+    auto dpps(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 128))
+        => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x3a, 0x40, dst, src, imm8);
     /// www.felixcloutier.com/x86/pminsb:pminsw
     @("r128", "rm128")
     auto pminsb(RM)(XMM dst, RM src) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x38, 0x38, dst, src);
@@ -84,23 +102,29 @@
     auto pmaxud(RM)(XMM dst, RM src) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x38, 0x3f, dst, src);
     /// www.felixcloutier.com/x86/pinsrb:pinsrd:pinsrq
     @("r128", "rm128", "imm8")
-    auto pinsrb(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 32)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x3a, 0x20, dst, src, imm8);
+    auto pinsrb(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 32))
+        => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x3a, 0x20, dst, src, imm8);
     /// www.felixcloutier.com/x86/pinsrb:pinsrd:pinsrq
     @("r128", "rm128", "imm8")
-    auto pinsrd(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 32)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x3a, 0x22, dst, src, imm8);
+    auto pinsrd(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 32))
+        => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x3a, 0x22, dst, src, imm8);
     /// www.felixcloutier.com/x86/pinsrb:pinsrd:pinsrq
     @("r128", "rm128", "imm8")
     @("r128", "rm64", "imm8")
-    auto pinsrq(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 64)) => emit!(0, FLIP)(0x66, 0x0f, 0x3a, 0x22, dst, src, imm8);
+    auto pinsrq(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 64))
+        => emit!(0, FLIP)(0x66, 0x0f, 0x3a, 0x22, dst, src, imm8);
     /// www.felixcloutier.com/x86/pextrb:pextrd:pextrq
     @("rm8", "r128", "imm8")
-    auto pextrb(RM)(RM dst, XMM src, ubyte imm8) if (valid!(RM, 8)) => emit!(0, NO_REX)(0x66, 0x0f, 0x3a, 0x14, dst, src, imm8);
+    auto pextrb(RM)(RM dst, XMM src, ubyte imm8) if (valid!(RM, 8))
+        => emit!(0, NO_REX)(0x66, 0x0f, 0x3a, 0x14, dst, src, imm8);
     /// www.felixcloutier.com/x86/pextrb:pextrd:pextrq
     @("rm32", "r128", "imm8")
-    auto pextrd(RM)(RM dst, XMM src, ubyte imm8) if (valid!(RM, 32)) => emit!(0, NO_REX)(0x66, 0x0f, 0x3a, 0x16, dst, src, imm8);
+    auto pextrd(RM)(RM dst, XMM src, ubyte imm8) if (valid!(RM, 32))
+        => emit!(0, NO_REX)(0x66, 0x0f, 0x3a, 0x16, dst, src, imm8);
     /// www.felixcloutier.com/x86/pextrb:pextrd:pextrq
     @("rm64", "r128", "imm8")
-    auto pextrq(RM)(RM dst, XMM src, ubyte imm8) if (valid!(RM, 64)) => emit!(0, FLIP)(0x66, 0x0f, 0x3a, 0x16, dst, src, imm8);
+    auto pextrq(RM)(RM dst, XMM src, ubyte imm8) if (valid!(RM, 64))
+        => emit!(0, FLIP)(0x66, 0x0f, 0x3a, 0x16, dst, src, imm8);
     /// www.felixcloutier.com/x86/pmovsx
     @("r128", "rm64")
     auto pmovsxbw(RM)(XMM dst, RM src) if (valid!(RM, 64)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x38, 0x20, dst, src);
@@ -109,31 +133,41 @@
     auto pmovzxbw(RM)(XMM dst, RM src) if (valid!(RM, 64)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x38, 0x30, dst, src);
     /// www.felixcloutier.com/x86/pmovsx
     @("r128", "rm128")
-    auto pmovsxbd(RM)(XMM dst, RM src) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x38, 0x21, dst, src);
+    auto pmovsxbd(RM)(XMM dst, RM src) if (valid!(RM, 128))
+        => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x38, 0x21, dst, src);
     /// www.felixcloutier.com/x86/pmovzx
     @("r128", "rm128")
-    auto pmovzxbd(RM)(XMM dst, RM src) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x38, 0x31, dst, src);
+    auto pmovzxbd(RM)(XMM dst, RM src) if (valid!(RM, 128))
+        => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x38, 0x31, dst, src);
     /// www.felixcloutier.com/x86/pmovsx
     @("r128", "rm128")
-    auto pmovsxbq(RM)(XMM dst, RM src) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x38, 0x22, dst, src);
+    auto pmovsxbq(RM)(XMM dst, RM src) if (valid!(RM, 128))
+        => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x38, 0x22, dst, src);
     /// www.felixcloutier.com/x86/pmovzx
     @("r128", "rm128")
-    auto pmovzxbq(RM)(XMM dst, RM src) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x38, 0x32, dst, src);
+    auto pmovzxbq(RM)(XMM dst, RM src) if (valid!(RM, 128))
+        => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x38, 0x32, dst, src);
     /// www.felixcloutier.com/x86/pmovsx
     @("r128", "rm128")
-    auto pmovsxwd(RM)(XMM dst, RM src) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x38, 0x23, dst, src);
+    auto pmovsxwd(RM)(XMM dst, RM src) if (valid!(RM, 128))
+        => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x38, 0x23, dst, src);
     /// www.felixcloutier.com/x86/pmovzx
     @("r128", "rm128")
-    auto pmovzxwd(RM)(XMM dst, RM src) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x38, 0x33, dst, src);
+    auto pmovzxwd(RM)(XMM dst, RM src) if (valid!(RM, 128))
+        => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x38, 0x33, dst, src);
     /// www.felixcloutier.com/x86/pmovsx
     @("r128", "rm128")
-    auto pmovsxwq(RM)(XMM dst, RM src) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x38, 0x24, dst, src);
+    auto pmovsxwq(RM)(XMM dst, RM src) if (valid!(RM, 128))
+        => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x38, 0x24, dst, src);
     /// www.felixcloutier.com/x86/pmovzx
     @("r128", "rm128")
-    auto pmovzxwq(RM)(XMM dst, RM src) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x38, 0x34, dst, src);
+    auto pmovzxwq(RM)(XMM dst, RM src) if (valid!(RM, 128))
+        => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x38, 0x34, dst, src);
     /// www.felixcloutier.com/x86/pmovsx
     @("r128", "rm128")
-    auto pmovsxdq(RM)(XMM dst, RM src) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x38, 0x25, dst, src);
+    auto pmovsxdq(RM)(XMM dst, RM src) if (valid!(RM, 128))
+        => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x38, 0x25, dst, src);
     /// www.felixcloutier.com/x86/pmovzx
     @("r128", "rm128")
-    auto pmovzxdq(RM)(XMM dst, RM src) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x38, 0x35, dst, src);
+    auto pmovzxdq(RM)(XMM dst, RM src) if (valid!(RM, 128))
+        => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x38, 0x35, dst, src);

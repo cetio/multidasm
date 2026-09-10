@@ -68,13 +68,16 @@
     auto pmuludq(RM)(XMM dst, RM src) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0xf4, dst, src);
     /// www.felixcloutier.com/x86/pshufd
     @("r128", "rm128", "imm8")
-    auto pshufd(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 128)) => emit!(0, NO_REX)(0x66, 0x0f, 0x70, dst, src, imm8);
+    auto pshufd(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 128))
+        => emit!(0, NO_REX)(0x66, 0x0f, 0x70, dst, src, imm8);
     /// www.felixcloutier.com/x86/pshuflw
     @("r128", "rm128", "imm8")
-    auto pshuflw(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0xf2, 0x0f, 0x70, dst, src, imm8);
+    auto pshuflw(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 128))
+        => emit!(0, NO_REX | FLIP)(0xf2, 0x0f, 0x70, dst, src, imm8);
     /// www.felixcloutier.com/x86/pshufhw
     @("r128", "rm128", "imm8")
-    auto pshufhw(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0xf3, 0x0f, 0x70, dst, src, imm8);
+    auto pshufhw(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 128))
+        => emit!(0, NO_REX | FLIP)(0xf3, 0x0f, 0x70, dst, src, imm8);
 
     // Additional SSE2 (compare, pack, shift, movmsk, float cmp/convert, mov load/store, shuffle)
     /// www.felixcloutier.com/x86/pcmpeqb:pcmpeqw:pcmpeqd
@@ -184,10 +187,12 @@
     auto maxps(RM)(XMM dst, RM src) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x0f, 0x5f, dst, src);
     /// www.felixcloutier.com/x86/cmppd
     @("r128", "rm128", "imm8")
-    auto cmppd(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0xc2, dst, src, imm8);
+    auto cmppd(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 128))
+        => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0xc2, dst, src, imm8);
     /// www.felixcloutier.com/x86/cmpps
     @("r128", "rm128", "imm8")
-    auto cmpps(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x0f, 0xc2, dst, src, imm8);
+    auto cmpps(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 128))
+        => emit!(0, NO_REX | FLIP)(0x0f, 0xc2, dst, src, imm8);
     /// www.felixcloutier.com/x86/comisd
     @("r128", "rm128")
     auto comisd(RM)(XMM dst, RM src) if (valid!(RM, 128, 64)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x2f, dst, src);
@@ -210,13 +215,17 @@
     auto movupd(Mem!128 dst, XMM src) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0x11, dst, src);
     /// www.felixcloutier.com/x86/shufpd
     @("r128", "rm128", "imm8")
-    auto shufpd(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0xc6, dst, src, imm8);
+    auto shufpd(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 128))
+        => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0xc6, dst, src, imm8);
     /// www.felixcloutier.com/x86/shufps
     @("r128", "rm128", "imm8")
-    auto shufps(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x0f, 0xc6, dst, src, imm8);
+    auto shufps(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 128))
+        => emit!(0, NO_REX | FLIP)(0x0f, 0xc6, dst, src, imm8);
     /// www.felixcloutier.com/x86/pinsrw
     @("r128", "rm128", "imm8")
-    auto pinsrw(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 128, 16)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0xc4, dst, src, imm8);
+    auto pinsrw(RM)(XMM dst, RM src, ubyte imm8) if (valid!(RM, 128, 16))
+        => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0xc4, dst, src, imm8);
     /// www.felixcloutier.com/x86/pextrw
     @("r128", "rm128", "imm8")
-    auto pextrw(RM)(R32 dst, RM src, ubyte imm8) if (valid!(RM, 128)) => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0xc5, dst, src, imm8);
+    auto pextrw(RM)(R32 dst, RM src, ubyte imm8) if (valid!(RM, 128))
+        => emit!(0, NO_REX | FLIP)(0x66, 0x0f, 0xc5, dst, src, imm8);

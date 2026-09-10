@@ -447,9 +447,11 @@
 
     /// www.felixcloutier.com/x86/andn
     @("r32", "r32", "rm32")
-    auto andn(RM)(R32 dst, R32 src, RM stor) if (valid!(RM, 32)) => emit!(0, VEX | INT, 128, M38, 0)(0xf2, dst, src, stor);
+    auto andn(RM)(R32 dst, R32 src, RM stor) if (valid!(RM, 32))
+        => emit!(0, VEX | INT, 128, M38, 0)(0xf2, dst, src, stor);
     @("r64", "r64", "rm64")
-    auto andn(RM)(R64 dst, R64 src, RM stor) if (valid!(RM, 64)) => emit!(0, VEX | INT, 128, M38, 0)(0xf2, dst, src, stor);
+    auto andn(RM)(R64 dst, R64 src, RM stor) if (valid!(RM, 64))
+        => emit!(0, VEX | INT, 128, M38, 0)(0xf2, dst, src, stor);
 
     /* ====== SGX ====== */
 
@@ -1587,13 +1589,19 @@
     /* ====== BMI2 ====== */
 
     /// www.felixcloutier.com/x86/sarx:shlx:shrx
-    auto sarx(RM)(R32 dst, RM src, R32 cnt) if (valid!(RM, 32)) => emit!(0, VEX | INT, 128, M38, 0xf3)(0xf7, dst, src, cnt);
-    auto shlx(RM)(R32 dst, RM src, R32 cnt) if (valid!(RM, 32)) => emit!(0, VEX | INT, 128, M38, 0x66)(0xf7, dst, src, cnt);
-    auto shrx(RM)(R32 dst, RM src, R32 cnt) if (valid!(RM, 32)) => emit!(0, VEX | INT, 128, M38, 0xf2)(0xf7, dst, src, cnt);
+    auto sarx(RM)(R32 dst, RM src, R32 cnt) if (valid!(RM, 32))
+        => emit!(0, VEX | INT, 128, M38, 0xf3)(0xf7, dst, src, cnt);
+    auto shlx(RM)(R32 dst, RM src, R32 cnt) if (valid!(RM, 32))
+        => emit!(0, VEX | INT, 128, M38, 0x66)(0xf7, dst, src, cnt);
+    auto shrx(RM)(R32 dst, RM src, R32 cnt) if (valid!(RM, 32))
+        => emit!(0, VEX | INT, 128, M38, 0xf2)(0xf7, dst, src, cnt);
 
-    auto sarx(RM)(R64 dst, RM src, R64 cnt) if (valid!(RM, 64)) => emit!(0, VEX | INT, 128, M38, 0xf3)(0xf7, dst, src, cnt);
-    auto shlx(RM)(R64 dst, RM src, R64 cnt) if (valid!(RM, 64)) => emit!(0, VEX | INT, 128, M38, 0x66)(0xf7, dst, src, cnt);
-    auto shrx(RM)(R64 dst, RM src, R64 cnt) if (valid!(RM, 64)) => emit!(0, VEX | INT, 128, M38, 0xf2)(0xf7, dst, src, cnt);
+    auto sarx(RM)(R64 dst, RM src, R64 cnt) if (valid!(RM, 64))
+        => emit!(0, VEX | INT, 128, M38, 0xf3)(0xf7, dst, src, cnt);
+    auto shlx(RM)(R64 dst, RM src, R64 cnt) if (valid!(RM, 64))
+        => emit!(0, VEX | INT, 128, M38, 0x66)(0xf7, dst, src, cnt);
+    auto shrx(RM)(R64 dst, RM src, R64 cnt) if (valid!(RM, 64))
+        => emit!(0, VEX | INT, 128, M38, 0xf2)(0xf7, dst, src, cnt);
 
     /* ====== MMX ====== */
 

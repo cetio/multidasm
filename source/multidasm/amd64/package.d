@@ -51,7 +51,8 @@ public:
                     return false;
                 else
                     return (isInstanceOf!(Reg, ARGS[INDEX]) || isInstanceOf!(Mem, ARGS[INDEX])) &&
-                        (isInstanceOf!(Reg, ARGS[INDEX + 1]) || isInstanceOf!(Mem, ARGS[INDEX + 1])) && isRM1!(INDEX + 2);
+                        (isInstanceOf!(Reg, ARGS[INDEX + 1]) || isInstanceOf!(Mem, ARGS[INDEX + 1])) &&
+                        isRM1!(INDEX + 2);
             }
 
             static if ((SELECTOR & VEX_MASK) == 0)
@@ -114,7 +115,8 @@ public:
                     if (x) rex |= (1 << 1);
                     if (b) rex |= (1 << 0);
                     size_t pos = 0;
-                    while (pos < buffer.length && (buffer[pos] == 0x66 || buffer[pos] == 0x67 || buffer[pos] == 0xf0 || buffer[pos] == 0xf2 || buffer[pos] == 0xf3))
+                    while (pos < buffer.length && (buffer[pos] == 0x66 || buffer[pos] == 0x67 ||
+                        buffer[pos] == 0xf0 || buffer[pos] == 0xf2 || buffer[pos] == 0xf3))
                         pos++;
                     buffer = buffer[0..pos]~rex~buffer[pos..$];
                 }
@@ -218,7 +220,8 @@ public:
                         we = false;
 
                     vex ~= 0xc4;
-                    vex ~= (cast(ubyte)(((r ? 0 : 1) << 5) | ((x ? 0 : 1) << 6) | ((b ? 0 : 1) << 7))) | (map_select & 0b00011111);
+                    vex ~= (cast(ubyte)(((r ? 0 : 1) << 5) | ((x ? 0 : 1) << 6) | ((b ? 0 : 1) << 7))) |
+                        (map_select & 0b00011111);
                 }
                 else
                     vex ~= 0xc5;
@@ -282,7 +285,8 @@ public:
                     ct = 2;
                 }
                 else
-                    static assert(0, "May not emit a non-scalar, non-ubyte[] value of type '"~typeof(arg).stringof~"'!");
+                    static assert(0, "May not emit a non-scalar, non-ubyte[] value of type '"~
+                        typeof(arg).stringof~"'!");
             }
 
             if (!prefixed)
@@ -300,7 +304,11 @@ public:
                         else static if (args.length - i - 1 == 1)
                             generatePrefix(Reg!(typeof(arg).sizeof * 8)(0), Reg!(typeof(args[i + 1]).sizeof * 8)(0));
                         else static if (args.length - i - 1 == 2)
-                            generatePrefix(Reg!(typeof(arg).sizeof * 8)(0), Reg!(typeof(args[i + 1]).sizeof * 8)(0), Reg!(typeof(args[i + 2]).sizeof * 8)(0));
+                            generatePrefix(
+                                Reg!(typeof(arg).sizeof * 8)(0),
+                                Reg!(typeof(args[i + 1]).sizeof * 8)(0),
+                                Reg!(typeof(args[i + 2]).sizeof * 8)(0)
+                            );
                         break;
                     }
                 }
