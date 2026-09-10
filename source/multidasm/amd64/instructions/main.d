@@ -17,6 +17,7 @@
         return size + 1;
     }
 
+    /// www.felixcloutier.com/x86/cmpxchg
     @("rm8", "r8")
     auto cmpxchg(RM)(RM dst, R8 src) if (valid!(RM, 8)) => emit!0(0x0f, 0xb0, dst, src);
     @("rm16", "r16")
@@ -26,15 +27,20 @@
     @("rm64", "r64")
     auto cmpxchg(RM)(RM dst, R64 src) if (valid!(RM, 64)) => emit!0(0x0f, 0xb1, dst, src);
 
+    /// www.felixcloutier.com/x86/aaa
     auto aaa() => emit!0(0x37);
+    /// www.felixcloutier.com/x86/aad
     auto aad() => emit!0(0xd5, 0x0a);
     @("imm8")
     auto aad(ubyte imm8) => emit!0(0xd5, imm8);
+    /// www.felixcloutier.com/x86/aam
     auto aam() => emit!0(0xd4, 0x0a);
     @("imm8")
     auto aam(ubyte imm8) => emit!0(0xd4, imm8);
+    /// www.felixcloutier.com/x86/aas
     auto aas() => emit!0(0x3f);
 
+    /// www.felixcloutier.com/x86/add
     @("imm8")
     auto add(ubyte imm8) => emit!0(0x04, imm8);
     @("imm16")
@@ -75,6 +81,7 @@
     @("r64", "m64")
     auto add(R64 dst, Mem!64 src) => emit!0(0x03, dst, src);
 
+    /// www.felixcloutier.com/x86/and
     @("imm8")
     auto and(ubyte imm8) => emit!0(0x24, imm8);
     @("imm16")
@@ -115,9 +122,11 @@
     @("r64", "m64")
     auto and(R64 dst, Mem!64 src) => emit!0(0x23, dst, src);
 
+    /// www.felixcloutier.com/x86/arpl
     @("rm16", "r16")
     auto arpl(RM)(RM dst, R16 src) if (valid!(RM, 16)) => emit!0(0x63, dst, src);
 
+    /// www.felixcloutier.com/x86/bsf
     @("r16", "rm16")
     auto bsf(RM)(R16 dst, RM src) if (valid!(RM, 16)) => emit!0(0x0f, 0xbc, dst, src);
     @("r32", "rm32")
@@ -125,6 +134,7 @@
     @("r64", "rm64")
     auto bsf(RM)(R64 dst, RM src) if (valid!(RM, 64)) => emit!0(0x0f, 0xbc, dst, src);
 
+    /// www.felixcloutier.com/x86/bsr
     @("r16", "rm16")
     auto bsr(RM)(R16 dst, RM src) if (valid!(RM, 16)) => emit!0(0x0f, 0xbd, dst, src);
     @("r32", "rm32")
@@ -132,11 +142,13 @@
     @("r64", "rm64")
     auto bsr(RM)(R64 dst, RM src) if (valid!(RM, 64)) => emit!0(0x0f, 0xbd, dst, src);
 
+    /// www.felixcloutier.com/x86/bswap
     @("r32")
     auto bswap(R32 dst) => emit!(0, ENCODED)(0x0f, 0xc8, dst);
     @("r64")
     auto bswap(R64 dst) => emit!(0, ENCODED)(0x0f, 0xc8, dst);
 
+    /// www.felixcloutier.com/x86/bt
     @("rm16", "r16")
     auto bt(RM)(RM dst, R16 src) if (valid!(RM, 16)) => emit!0(0x0f, 0xa3, dst, src); 
     @("rm32", "r32")
@@ -150,6 +162,7 @@
     @("rm64", "imm8")
     auto bt(RM)(RM dst, ubyte imm8) if (valid!(RM, 64)) => emit!4(0x0f, 0xba, dst, imm8); 
 
+    /// www.felixcloutier.com/x86/btc
     @("rm16", "r16")
     auto btc(RM)(RM dst, R16 src) if (valid!(RM, 16)) => emit!0(0x0f, 0xbb, dst, src); 
     @("rm32", "r32")
@@ -163,6 +176,7 @@
     @("rm64", "imm8")
     auto btc(RM)(RM dst, ubyte imm8) if (valid!(RM, 64)) => emit!7(0x0f, 0xba, dst, imm8); 
 
+    /// www.felixcloutier.com/x86/btr
     @("rm16", "r16")
     auto btr(RM)(RM dst, R16 src) if (valid!(RM, 16)) => emit!0(0x0f, 0xb3, dst, src); 
     @("rm32", "r32")
@@ -176,6 +190,7 @@
     @("rm64", "imm8")
     auto btr(RM)(RM dst, ubyte imm8) if (valid!(RM, 64)) => emit!6(0x0f, 0xba, dst, imm8); 
 
+    /// www.felixcloutier.com/x86/bts
     @("rm16", "r16")
     auto bts(RM)(RM dst, R16 src) if (valid!(RM, 16)) => emit!0(0x0f, 0xab, dst, src); 
     @("rm32", "r32")
@@ -189,6 +204,7 @@
     @("rm64", "imm8")
     auto bts(RM)(RM dst, ubyte imm8) if (valid!(RM, 64)) => emit!5(0x0f, 0xba, dst, imm8);
 
+    /// www.felixcloutier.com/x86/cmp
     @("imm8")
     auto cmp(ubyte imm8) => emit!0(0x3c, imm8);
     @("imm16")
@@ -229,25 +245,38 @@
     @("r64", "m64")
     auto cmp(R64 dst, Mem!64 src) => emit!0(0x3b, dst, src);
 
+    /// www.felixcloutier.com/x86/cwd:cdq:cqo
     auto cwd() => emit!0(0x66, 0x99);
+    /// www.felixcloutier.com/x86/cwd:cdq:cqo
     auto cdq() => emit!0(0x99);
+    /// www.felixcloutier.com/x86/cwd:cdq:cqo
     auto cqo() => emit!0(0x48, 0x99);
 
+    /// www.felixcloutier.com/x86/cbw:cwde:cdqe
     auto cbw() => emit!0(0x66, 0x98);
+    /// www.felixcloutier.com/x86/cbw:cwde:cdqe
     auto cwde() => emit!0(0x98);
+    /// www.felixcloutier.com/x86/cbw:cwde:cdqe
     auto cdqe() => emit!0(0x48, 0x98);
 
+    /// www.felixcloutier.com/x86/cpuid
     auto cpuid() => emit!0(0x0f, 0xa2);
     @("imm32")
     auto cpuid(uint imm32) => mov(eax, imm32) + cpuid();
 
+    /// www.felixcloutier.com/x86/clc
     auto clc() => emit!0(0xf8);
+    /// www.felixcloutier.com/x86/cld
     auto cld() => emit!0(0xfc);
+    /// www.felixcloutier.com/x86/cli
     auto cli() => emit!0(0xfa);
+    /// www.felixcloutier.com/x86/clts
     auto clts() => emit!0(0x0f, 0x06);
 
+    /// www.felixcloutier.com/x86/cmc
     auto cmc() => emit!0(0xf5);
 
+    /// www.felixcloutier.com/x86/dec
     @("rm8")
     auto dec(RM)(RM dst) if (valid!(RM, 8)) => emit!1(0xfe, dst);
     static if (X64)
@@ -272,21 +301,32 @@
     @("r32")
     auto dec(R32 dst) => emit!(0, ENCODED)(0x48, dst);
 
+    /// www.felixcloutier.com/x86/int3
     auto int3() => emit!0(0xcc);
+    /// www.felixcloutier.com/x86/intn
     @("imm8")
     auto _int(ubyte imm8) => emit!0(0xcd, imm8);
+    /// www.felixcloutier.com/x86/into
     auto into() => emit!0(0xce);
+    /// www.felixcloutier.com/x86/int1
     auto int1() => emit!0(0xf1);
+    /// www.felixcloutier.com/x86/ud0
     @("r32", "rm32")
     auto ud0(RM)(R32 dst, RM src) if (valid!(RM, 32)) => emit!0(0x0f, 0xff, dst, src);
+    /// www.felixcloutier.com/x86/ud1
     @("r32", "rm32")
     auto ud1(RM)(R32 dst, RM src) if (valid!(RM, 32)) => emit!0(0x0f, 0xb9, dst, src);
+    /// www.felixcloutier.com/x86/ud2
     auto ud2() => emit!0(0x0f, 0x0b);
     
+    /// www.felixcloutier.com/x86/iret:iretd:iretq
     auto iret() => emit!0(0xcf);
+    /// www.felixcloutier.com/x86/iret:iretd:iretq
     auto iretd() => emit!0(0xcf);
+    /// www.felixcloutier.com/x86/iret:iretd:iretq
     auto iretq() => emit!0(0xcf);
 
+    /// www.felixcloutier.com/x86/inc
     @("rm8")
     auto inc(RM)(RM dst) if (valid!(RM, 8)) => emit!0(0xfe, dst);
     static if (X64)
@@ -311,9 +351,12 @@
     @("r32")
     auto inc(R32 dst) => emit!(0, ENCODED)(0x40, dst);
 
+    /// www.felixcloutier.com/x86/hlt
     auto hlt() => emit!0(0xf4);
+    /// www.felixcloutier.com/x86/swapgs
     auto swapgs() => emit!0(0x0f, 0x01, 0xf8);
     
+    /// www.felixcloutier.com/x86/lock
     @("prefix")
     auto lock(size_t size)
     {
@@ -321,20 +364,29 @@
         return size + 1;
     }
 
+    /// www.felixcloutier.com/x86/wait:fwait
     auto wait() => emit!0(0x9b);
+    /// www.felixcloutier.com/x86/wait:fwait
     auto fwait() => emit!0(0x9b);
 
+    /// www.felixcloutier.com/x86/sysret
     auto sysretc() => emit!0(0x0f, 0x07);
+    /// www.felixcloutier.com/x86/sysret
     auto sysret() => emit!0(0x0f, 0x07);
+    /// www.felixcloutier.com/x86/syscall
     auto syscall() => emit!0(0x0f, 0x05);
+    /// www.felixcloutier.com/x86/rsm
     auto rsm() => emit!0(0x0f, 0xaa);
 
+    /// www.felixcloutier.com/x86/leave
     auto leave() => emit!0(0xc9);
+    /// www.felixcloutier.com/x86/enter
     @("imm16")
     auto enter(ushort imm16) => emit!0(0xc8, imm16, 0x00);
     @("imm16", "imm8")
     auto enter(ushort imm16, ubyte imm8) => emit!0(0xc8, imm16, imm8);
     
+    /// www.felixcloutier.com/x86/lea
     @("r16", "m16")
     auto lea(RM)(R16 dst, Mem!16) => emit!0(0x8d, dst, src);
     @("r32", "m32")
@@ -342,11 +394,13 @@
     @("r64", "m64")
     auto lea(RM)(R64 dst, Mem!64) => emit!0(0x8d, dst, src);
 
+    /// www.felixcloutier.com/x86/lds
     @("r16", "m16")
     auto lds(RM)(R16 dst, Mem!16) => emit!0(0xc5, dst, src);
     @("r32", "m32")
     auto lds(RM)(R32 dst, Mem!32) => emit!0(0xc5, dst, src);
 
+    /// www.felixcloutier.com/x86/lss
     @("r16", "m16")
     auto lss(RM)(R16 dst, Mem!16) => emit!0(0x0f, 0xb2, dst, src);
     @("r32", "m32")
@@ -354,11 +408,13 @@
     @("r64", "m64")
     auto lss(RM)(R64 dst, Mem!64) => emit!0(0x0f, 0xb2, dst, src);
 
+    /// www.felixcloutier.com/x86/les
     @("r16", "m16")
     auto les(RM)(R16 dst, Mem!16) => emit!0(0xc4, dst, src);
     @("r32", "m32")
     auto les(RM)(R32 dst, Mem!32) => emit!0(0xc4, dst, src);
 
+    /// www.felixcloutier.com/x86/lfs
     @("r16", "m16")
     auto lfs(RM)(R16 dst, Mem!16) => emit!0(0x0f, 0xb4, dst, src);
     @("r32", "m32")
@@ -366,6 +422,7 @@
     @("r64", "m64")
     auto lfs(RM)(R64 dst, Mem!64) => emit!0(0x0f, 0xb4, dst, src);
 
+    /// www.felixcloutier.com/x86/lgs
     @("r16", "m16")
     auto lgs(RM)(R16 dst, Mem!16) => emit!0(0x0f, 0xb5, dst, src);
     @("r32", "m32")
@@ -373,6 +430,7 @@
     @("r64", "m64")
     auto lgs(RM)(R64 dst, Mem!64) => emit!0(0x0f, 0xb5, dst, src);
 
+    /// www.felixcloutier.com/x86/lsl
     @("r16", "rm16")
     auto lsl(RM)(R16 dst, RM src) if (valid!(RM, 16)) => emit!0(0x0f, 0x03, dst, src);
     @("r32", "r32")
@@ -384,11 +442,14 @@
     @("r64", "m16")
     auto lsl(R64 dst, Mem!16 src) => emit!0(0x0f, 0x03, dst, src);
 
+    /// www.felixcloutier.com/x86/ltr
     @("rm16")
     auto ltr(RM)(RM dst) if (valid!(RM, 16)) => emit!3(0x0f, 0x00, dst);
+    /// www.felixcloutier.com/x86/str
     @("rm16")
     auto str(RM)(RM dst) if (valid!(RM, 16)) => emit!1(0x0f, 0x00, dst);
 
+    /// www.felixcloutier.com/x86/neg
     @("rm8")
     auto neg(RM)(RM dst) if (valid!(RM, 8)) => emit!3(0xf6, dst);
     @("rm16")
@@ -398,10 +459,12 @@
     @("rm64")
     auto neg(RM)(RM dst) if (valid!(RM, 64)) => emit!3(0xf7, dst);
 
+    /// www.felixcloutier.com/x86/nop
     auto nop() => emit!0(0x90);
     @("rm16")
     auto nop(RM)(RM dst) if (valid!(RM, 16)) => emit!0(0x0f, 0x1f, dst);
 
+    /// www.felixcloutier.com/x86/not
     @("rm8")
     auto not(RM)(RM dst) if (valid!(RM, 8)) => emit!2(0xf6, dst);
     @("rm16")
@@ -411,17 +474,23 @@
     @("rm64")
     auto not(RM)(RM dst) if (valid!(RM, 64)) => emit!2(0xf7, dst);
 
+    /// www.felixcloutier.com/x86/ret
     auto ret() => emit!0(0xc3);
     @("imm16")
     auto ret(ushort imm16) => emit!0(0xc2, imm16);
+    /// www.felixcloutier.com/x86/ret
     auto retf() => emit!0(0xcb);
     @("imm16")
     auto retf(ushort imm16) => emit!0(0xca, imm16);
 
+    /// www.felixcloutier.com/x86/stc
     auto stc() => emit!0(0xf9);
+    /// www.felixcloutier.com/x86/std
     auto std() => emit!0(0xfd);
+    /// www.felixcloutier.com/x86/sti
     auto sti() => emit!0(0xfb);
 
+    /// www.felixcloutier.com/x86/sub
     @("imm8")
     auto sub(ubyte imm8) => emit!0(0x2c, imm8);
     @("imm16")
@@ -462,6 +531,7 @@
     @("r64", "m64")
     auto sub(R64 dst, Mem!64 src) => emit!0(0x2b, dst, src);
 
+    /// www.felixcloutier.com/x86/sbb
     @("imm8")
     auto sbb(ubyte imm8) => emit!0(0x1c, imm8);
     @("imm16")
@@ -502,6 +572,7 @@
     @("r64", "m64")
     auto sbb(R64 dst, Mem!64 src) => emit!0(0x1b, dst, src);
 
+    /// www.felixcloutier.com/x86/xor
     @("imm8")
     auto xor(ubyte imm8) => emit!0(0x34, imm8);
     @("imm16")
@@ -542,6 +613,7 @@
     @("r64", "m64")
     auto xor(R64 dst, Mem!64 src) => emit!0(0x33, dst, src);
 
+    /// www.felixcloutier.com/x86/or
     @("imm8")
     auto or(ubyte imm8) => emit!0(0x0c, imm8);
     @("imm16")
@@ -582,6 +654,7 @@
     @("r64", "m64")
     auto or(R64 dst, Mem!64 src) => emit!0(0xb, dst, src);
 
+    /// www.felixcloutier.com/x86/sal:sar:shl:shr
     @("rm8")
     auto sal(RM)(RM dst) if (valid!(RM, 8)) => emit!4(0xd2, dst, cl);
     @("rm8", "imm8")
@@ -623,6 +696,7 @@
             return emit!4(0xc1, dst, imm8);
     }
 
+    /// www.felixcloutier.com/x86/sal:sar:shl:shr
     @("rm8")
     auto sar(RM)(RM dst) if (valid!(RM, 8)) => emit!7(0xd2, dst, cl);
     @("rm8", "imm8")
@@ -664,6 +738,7 @@
             return emit!7(0xc1, dst, imm8);
     }
 
+    /// www.felixcloutier.com/x86/sal:sar:shl:shr
     @("rm8")
     auto shl(RM)(RM dst) if (valid!(RM, 8)) => sal(dst);
     @("rm8", "imm8")
@@ -681,6 +756,7 @@
     @("rm64", "imm8")
     auto shl(RM)(RM dst, ubyte imm8) if (valid!(RM, 64)) => sal(dst, imm8);
 
+    /// www.felixcloutier.com/x86/sal:sar:shl:shr
     @("rm8")
     auto shr(RM)(RM dst) if (valid!(RM, 8)) => emit!5(0xd2, dst, cl);
     @("rm8", "imm8")
@@ -722,6 +798,7 @@
             return emit!5(0xc1, dst, imm8);
     }
 
+    /// www.felixcloutier.com/x86/rcl
     @("rm8")
     auto rcl(RM)(RM dst) if (valid!(RM, 8)) => emit!2(0xd2, dst, cl);
     @("rm8", "imm8")
@@ -763,6 +840,7 @@
             return emit!2(0xc1, dst, imm8);
     }
 
+    /// www.felixcloutier.com/x86/rcr
     @("rm8")
     auto rcr(RM)(RM dst) if (valid!(RM, 8)) => emit!3(0xd2, dst, cl);
     @("rm8", "imm8")
@@ -804,6 +882,7 @@
             return emit!3(0xc1, dst, imm8);
     }
 
+    /// www.felixcloutier.com/x86/rol
     @("rm8")
     auto rol(RM)(RM dst) if (valid!(RM, 8)) => emit!0(0xd2, dst, cl);
     @("rm8", "imm8")
@@ -845,6 +924,7 @@
             return emit!0(0xc1, dst, imm8);
     }
 
+    /// www.felixcloutier.com/x86/ror
     @("rm8")
     auto ror(RM)(RM dst) if (valid!(RM, 8)) => emit!1(0xd2, dst, cl);
     @("rm8", "imm8")
@@ -886,6 +966,7 @@
             return emit!1(0xc1, dst, imm8);
     }
 
+    /// www.felixcloutier.com/x86/test
     @("imm8")
     auto test(ubyte imm8) => emit!0(0xa8, imm8);
     @("imm16")
@@ -911,6 +992,7 @@
     @("rm64", "r64")
     auto test(RM)(RM dst, R64 src) if (valid!(RM, 64)) => emit!(0, FLIP)(0x85, dst, src);
 
+    /// www.felixcloutier.com/x86/pop
     @("m16")
     auto pop(Mem!16 dst) => emit!0(0x8f, dst);
     static if (!X64)
@@ -929,19 +1011,30 @@
     @("r64")
     auto pop(R64 dst) => emit!(0, ENCODED | NO_REX_W)(0x58, dst);
 
+    /// www.felixcloutier.com/x86/pop
     auto popds() => emit!0(0x1f);
+    /// www.felixcloutier.com/x86/pop
     auto popes() => emit!0(0x07);
+    /// www.felixcloutier.com/x86/pop
     auto popss() => emit!0(0x17);
+    /// www.felixcloutier.com/x86/pop
     auto popfs() => emit!0(0x0f, 0xa1);
+    /// www.felixcloutier.com/x86/pop
     auto popgs() => emit!0(0x0f, 0xa9); 
 
+    /// www.felixcloutier.com/x86/popa:popad
     auto popa() => emit!0(0x61);
+    /// www.felixcloutier.com/x86/popa:popad
     auto popad() => emit!0(0x61);
 
+    /// www.felixcloutier.com/x86/popf:popfd:popfq
     auto popf() => emit!0(0x9d);
+    /// www.felixcloutier.com/x86/popf:popfd:popfq
     auto popfd() => emit!0(0x9d);
+    /// www.felixcloutier.com/x86/popf:popfd:popfq
     auto popfq() => emit!0(0x9d);
 
+    /// www.felixcloutier.com/x86/push
     @("m16")
     auto push(Mem!16 dst) => emit!6(0xff, dst);
     static if (!X64)
@@ -967,20 +1060,32 @@
     @("imm32")
     auto push(uint imm32) => emit!0(0x68, imm32);
 
+    /// www.felixcloutier.com/x86/push
     auto pushcs() => emit!0(0x0e);
+    /// www.felixcloutier.com/x86/push
     auto pushss() => emit!0(0x16);
+    /// www.felixcloutier.com/x86/push
     auto pushds() => emit!0(0x1e);
+    /// www.felixcloutier.com/x86/push
     auto pushes() => emit!0(0x06);
+    /// www.felixcloutier.com/x86/push
     auto pushfs() => emit!0(0x0f, 0xa0);
+    /// www.felixcloutier.com/x86/push
     auto pushgs() => emit!0(0x0f, 0xa8); 
 
+    /// www.felixcloutier.com/x86/pusha:pushad
     auto pusha() => emit!0(0x60);
+    /// www.felixcloutier.com/x86/pusha:pushad
     auto pushad() => emit!0(0x60);
 
+    /// www.felixcloutier.com/x86/pushf:pushfd:pushfq
     auto pushf() => emit!0(0x9c);
+    /// www.felixcloutier.com/x86/pushf:pushfd:pushfq
     auto pushfd() => emit!0(0x9c);
+    /// www.felixcloutier.com/x86/pushf:pushfd:pushfq
     auto pushfq() => emit!0(0x9c);
 
+    /// www.felixcloutier.com/x86/xadd
     @("rm8", "r8")
     auto xadd(RM)(RM dst, R8 src) if (valid!(RM, 8)) => emit!0(0x0f, 0xc0, dst, src);
     @("rm16", "r16")
@@ -990,6 +1095,7 @@
     @("rm64", "r64")
     auto xadd(RM)(RM dst, R64 src) if (valid!(RM, 64)) => emit!0(0x0f, 0xc1, dst, src);
 
+    /// www.felixcloutier.com/x86/xchg
     @("r16")
     auto xchg(R16 dst) => emit!(0, ENCODED)(90, dst);
     @("r32")
@@ -1006,12 +1112,15 @@
     @("rm64", "rm64")
     auto xchg(A, B)(A dst, B src) if (valid!(A, 64) && valid!(B, 64)) => emit!0(0x87, dst, src);
 
+    /// www.felixcloutier.com/x86/xlat:xlatb
     auto xlat() => emit!0(0xd7);
+    /// www.felixcloutier.com/x86/xlat:xlatb
     static if (!X64)
     auto xlatb() => emit!0(0xd7);
     static if (X64)
     auto xlatb() => emit!0(0x48, 0xd7);
 
+    /// www.felixcloutier.com/x86/lar
     @("r16", "m16")
     auto lar(R16 dst, Mem!16 src) => emit!0(0x0f, 0x02, dst, src);
     @("r16", "r16")
@@ -1021,9 +1130,12 @@
     @("r32", "r32")
     auto lar(R32 dst, R32 src) => emit!0(0x0f, 0x02, dst, src);
 
+    /// www.felixcloutier.com/x86/daa
     auto daa() => emit!0(0x27);
+    /// www.felixcloutier.com/x86/das
     auto das() => emit!0(0x2f);
 
+    /// www.felixcloutier.com/x86/mul
     @("rm8")
     auto mul(RM)(RM dst) if (valid!(RM, 8)) => emit!4(0xf6, dst);
     @("rm16")
@@ -1033,6 +1145,7 @@
     @("rm64")
     auto mul(RM)(RM dst) if (valid!(RM, 64)) => emit!4(0xf7, dst);
 
+    /// www.felixcloutier.com/x86/imul
     @("rm8")
     auto imul(RM)(RM dst) if (valid!(RM, 8)) => emit!5(0xf6, dst);
     @("rm16")
@@ -1062,6 +1175,7 @@
     @("r64", "rm64", "imm32")
     auto imul(RM)(R64 dst, RM src, uint imm32) if (valid!(RM, 64)) => emit!0(0x69, dst, src, imm32);
 
+    /// www.felixcloutier.com/x86/div
     @("rm8")
     auto div(RM)(RM dst) if (valid!(RM, 8)) => emit!6(0xf6, dst);
     @("rm16")
@@ -1071,6 +1185,7 @@
     @("rm64")
     auto div(RM)(RM dst) if (valid!(RM, 64)) => emit!6(0xf7, dst);
 
+    /// www.felixcloutier.com/x86/idiv
     @("rm8")
     auto idiv(RM)(RM dst) if (valid!(RM, 8)) => emit!7(0xf6, dst);
     @("rm16")
@@ -1080,6 +1195,7 @@
     @("rm64")
     auto idiv(RM)(RM dst) if (valid!(RM, 64)) => emit!7(0xf7, dst);
 
+    /// www.felixcloutier.com/x86/mov
     @("rm8", "r8")
     auto mov(RM)(RM dst, R8 src) if (valid!(RM, 8)) => emit!(0, FLIP)(0x88, dst, src);
     @("rm16", "r16")
@@ -1134,6 +1250,7 @@
     @("dr", "r64")
     auto mov(DR dst, R64 src) => emit!0(0x0f, 0x23, dst, src);
 
+    /// www.felixcloutier.com/x86/movsx
     @("r16", "rm8")
     auto movsx(RM)(R16 dst, RM src) if (valid!(RM, 8)) => emit!0(0x0f, 0xbe, dst, src);
     @("r32", "rm8")
@@ -1146,6 +1263,7 @@
     @("r64", "rm16")
     auto movsx(RM)(R64 dst, RM src) if (valid!(RM, 16)) => emit!0(0x0f, 0xbf, dst, src);
 
+    /// www.felixcloutier.com/x86/movsxd
     @("r16", "rm16")
     auto movsxd(RM)(R16 dst, RM src) if (valid!(RM, 16)) => emit!0(0x63, dst, src);
     @("r32", "rm32")
@@ -1153,6 +1271,7 @@
     @("r64", "rm32")
     auto movsxd(RM)(R64 dst, RM src) if (valid!(RM, 32)) => emit!0(0x63, dst, src);
 
+    /// www.felixcloutier.com/x86/movzx
     @("r16", "rm8")
     auto movzx(RM)(R16 dst, RM src) if (valid!(RM, 8)) => emit!0(0x0f, 0xb6, dst, src);
     @("r32", "rm8")
@@ -1165,6 +1284,7 @@
     @("r64", "rm16")
     auto movzx(RM)(R64 dst, RM src) if (valid!(RM, 16)) => emit!0(0x0f, 0xb7, dst, src);
 
+    /// www.felixcloutier.com/x86/call
     @("imm16")
     auto call(ushort rel16) => emit!0(0xe8, rel16);
     @("imm32")
@@ -1184,13 +1304,17 @@
     @("m64")
     auto call(Mem!64 dst) => emit!3(0xff, dst);
 
+    /// www.felixcloutier.com/x86/loop:loope:loopz:loopne:loopnz
     @("jump")
     auto loop(string name) => branches ~= tuple(cast(ptrdiff_t)buffer.length, name, "loop", name !in labels);
+    /// www.felixcloutier.com/x86/loop:loope:loopz:loopne:loopnz
     @("jump")
     auto loope(string name) => branches ~= tuple(cast(ptrdiff_t)buffer.length, name, "loope", name !in labels);
+    /// www.felixcloutier.com/x86/loop:loope:loopz:loopne:loopnz
     @("jump")
     auto loopne(string name) => branches ~= tuple(cast(ptrdiff_t)buffer.length, name, "loopne", name !in labels);
 
+    /// www.felixcloutier.com/x86/jmp
     @("jump")
     auto jmp(string name) => branches ~= tuple(cast(ptrdiff_t)buffer.length, name, "jmp", name !in labels);
     @("rm16")
@@ -1209,73 +1333,107 @@
     @("imm32")
     auto jmp(uint imm32) => emit!0(0xea, imm32);
 
+    /// www.felixcloutier.com/x86/jcc
     @("jump")
     auto ja(string name) => branches ~= tuple(cast(ptrdiff_t)buffer.length, name, "ja", name !in labels);
+    /// www.felixcloutier.com/x86/jcc
     @("jump")
     auto jae(string name) => branches ~= tuple(cast(ptrdiff_t)buffer.length, name, "jae", name !in labels);
+    /// www.felixcloutier.com/x86/jcc
     @("jump")
     auto jb(string name) => branches ~= tuple(cast(ptrdiff_t)buffer.length, name, "jb", name !in labels);
+    /// www.felixcloutier.com/x86/jcc
     @("jump")
     auto jbe(string name) => branches ~= tuple(cast(ptrdiff_t)buffer.length, name, "jbe", name !in labels);
+    /// www.felixcloutier.com/x86/jcc
     @("jump")
     auto jc(string name) => branches ~= tuple(cast(ptrdiff_t)buffer.length, name, "jc", name !in labels);
+    /// www.felixcloutier.com/x86/jcc
     @("jump")
     auto jcxz(string name) => branches ~= tuple(cast(ptrdiff_t)buffer.length, name, "jcxz", name !in labels);
+    /// www.felixcloutier.com/x86/jcc
     @("jump")
     auto jecxz(string name) => branches ~= tuple(cast(ptrdiff_t)buffer.length, name, "jecxz", name !in labels);
+    /// www.felixcloutier.com/x86/jcc
     @("jump")
     auto jrcxz(string name) => branches ~= tuple(cast(ptrdiff_t)buffer.length, name, "jrcxz", name !in labels);
+    /// www.felixcloutier.com/x86/jcc
     @("jump")
     auto je(string name) => branches ~= tuple(cast(ptrdiff_t)buffer.length, name, "je", name !in labels);
+    /// www.felixcloutier.com/x86/jcc
     @("jump")
     auto jg(string name) => branches ~= tuple(cast(ptrdiff_t)buffer.length, name, "jg", name !in labels);
+    /// www.felixcloutier.com/x86/jcc
     @("jump")
     auto jge(string name) => branches ~= tuple(cast(ptrdiff_t)buffer.length, name, "jge", name !in labels);
+    /// www.felixcloutier.com/x86/jcc
     @("jump")
     auto jl(string name) => branches ~= tuple(cast(ptrdiff_t)buffer.length, name, "jl", name !in labels);
+    /// www.felixcloutier.com/x86/jcc
     @("jump")
     auto jle(string name) => branches ~= tuple(cast(ptrdiff_t)buffer.length, name, "jle", name !in labels);
+    /// www.felixcloutier.com/x86/jcc
     @("jump")
     auto jna(string name) => branches ~= tuple(cast(ptrdiff_t)buffer.length, name, "jna", name !in labels);
+    /// www.felixcloutier.com/x86/jcc
     @("jump")
     auto jnae(string name) => branches ~= tuple(cast(ptrdiff_t)buffer.length, name, "jnae", name !in labels);
+    /// www.felixcloutier.com/x86/jcc
     @("jump")
     auto jnb(string name) => branches ~= tuple(cast(ptrdiff_t)buffer.length, name, "jnb", name !in labels);
+    /// www.felixcloutier.com/x86/jcc
     @("jump")
     auto jnbe(string name) => branches ~= tuple(cast(ptrdiff_t)buffer.length, name, "jnbe", name !in labels);
+    /// www.felixcloutier.com/x86/jcc
     @("jump")
     auto jnc(string name) => branches ~= tuple(cast(ptrdiff_t)buffer.length, name, "jnc", name !in labels);
+    /// www.felixcloutier.com/x86/jcc
     @("jump")
     auto jne(string name) => branches ~= tuple(cast(ptrdiff_t)buffer.length, name, "jne", name !in labels);
+    /// www.felixcloutier.com/x86/jcc
     @("jump")
     auto jng(string name) => branches ~= tuple(cast(ptrdiff_t)buffer.length, name, "jng", name !in labels);
+    /// www.felixcloutier.com/x86/jcc
     @("jump")
     auto jnge(string name) => branches ~= tuple(cast(ptrdiff_t)buffer.length, name, "jnge", name !in labels);
+    /// www.felixcloutier.com/x86/jcc
     @("jump")
     auto jnl(string name) => branches ~= tuple(cast(ptrdiff_t)buffer.length, name, "jnl", name !in labels);
+    /// www.felixcloutier.com/x86/jcc
     @("jump")
     auto jnle(string name) => branches ~= tuple(cast(ptrdiff_t)buffer.length, name, "jnle", name !in labels);
+    /// www.felixcloutier.com/x86/jcc
     @("jump")
     auto jno(string name) => branches ~= tuple(cast(ptrdiff_t)buffer.length, name, "jno", name !in labels);
+    /// www.felixcloutier.com/x86/jcc
     @("jump")
     auto jnp(string name) => branches ~= tuple(cast(ptrdiff_t)buffer.length, name, "jnp", name !in labels);
+    /// www.felixcloutier.com/x86/jcc
     @("jump")
     auto jns(string name) => branches ~= tuple(cast(ptrdiff_t)buffer.length, name, "jns", name !in labels);
+    /// www.felixcloutier.com/x86/jcc
     @("jump")
     auto jnz(string name) => branches ~= tuple(cast(ptrdiff_t)buffer.length, name, "jnz", name !in labels);
+    /// www.felixcloutier.com/x86/jcc
     @("jump")
     auto jo(string name) => branches ~= tuple(cast(ptrdiff_t)buffer.length, name, "jo", name !in labels);
+    /// www.felixcloutier.com/x86/jcc
     @("jump")
     auto jp(string name) => branches ~= tuple(cast(ptrdiff_t)buffer.length, name, "jp", name !in labels);
+    /// www.felixcloutier.com/x86/jcc
     @("jump")
     auto jpe(string name) => branches ~= tuple(cast(ptrdiff_t)buffer.length, name, "jpe", name !in labels);
+    /// www.felixcloutier.com/x86/jcc
     @("jump")
     auto jpo(string name) => branches ~= tuple(cast(ptrdiff_t)buffer.length, name, "jpo", name !in labels);
+    /// www.felixcloutier.com/x86/jcc
     @("jump")
     auto js(string name) => branches ~= tuple(cast(ptrdiff_t)buffer.length, name, "js", name !in labels);
+    /// www.felixcloutier.com/x86/jcc
     @("jump")
     auto jz(string name) => branches ~= tuple(cast(ptrdiff_t)buffer.length, name, "jz", name !in labels);
         
+    /// www.felixcloutier.com/x86/rep:repe:repz:repne:repnz
     @("prefix")
     auto rep(size_t size)
     {
@@ -1283,6 +1441,7 @@
         return size + 1;
     }
         
+    /// www.felixcloutier.com/x86/rep:repe:repz:repne:repnz
     @("prefix")
     auto repe(size_t size)
     {
@@ -1290,6 +1449,7 @@
         return size + 1;
     }
         
+    /// www.felixcloutier.com/x86/rep:repe:repz:repne:repnz
     @("prefix")
     auto repz(size_t size)
     {
@@ -1297,6 +1457,7 @@
         return size + 1;
     }
         
+    /// www.felixcloutier.com/x86/rep:repe:repz:repne:repnz
     @("prefix")
     auto repne(size_t size)
     {
@@ -1304,6 +1465,7 @@
         return size + 1;
     }
 
+    /// www.felixcloutier.com/x86/rep:repe:repz:repne:repnz
     @("prefix")
     auto repnz(size_t size)
     {
@@ -1311,6 +1473,7 @@
         return size + 1;
     }
 
+    /// www.felixcloutier.com/x86/movs:movsb:movsw:movsd:movsq
     @("m8", "m8")
     auto movs(Mem!8 dst, Mem!8 src) => emit!0(0xa4, dst, src);
     @("m16", "m16")
@@ -1320,11 +1483,16 @@
     @("m64", "m64")
     auto movs(Mem!64 dst, Mem!64 src) => emit!0(0xa5, dst, src);
 
+    /// www.felixcloutier.com/x86/movs:movsb:movsw:movsd:movsq
     auto movsb() => emit!0(0xa4);
+    /// www.felixcloutier.com/x86/movs:movsb:movsw:movsd:movsq
     auto movsw() => emit!0(0x66, 0xa5);
+    /// www.felixcloutier.com/x86/movs:movsb:movsw:movsd:movsq
     auto movsd() => emit!0(0xa5);
+    /// www.felixcloutier.com/x86/movs:movsb:movsw:movsd:movsq
     auto movsq() => emit!0(0x48, 0xa5);
 
+    /// www.felixcloutier.com/x86/cmps:cmpsb:cmpsw:cmpsd:cmpsq
     @("m8", "m8")
     auto cmps(Mem!8 dst, Mem!8 src) => emit!0(0xa6, dst, src);
     @("m16", "m16")
@@ -1334,11 +1502,16 @@
     @("m64", "m64")
     auto cmps(Mem!64 dst, Mem!64 src) => emit!0(0xa7, dst, src);
 
+    /// www.felixcloutier.com/x86/cmps:cmpsb:cmpsw:cmpsd:cmpsq
     auto cmpsb() => emit!0(0xa6);
+    /// www.felixcloutier.com/x86/cmps:cmpsb:cmpsw:cmpsd:cmpsq
     auto cmpsw() => emit!0(0x66, 0xa7);
+    /// www.felixcloutier.com/x86/cmps:cmpsb:cmpsw:cmpsd:cmpsq
     auto cmpsd() => emit!0(0xa7);
+    /// www.felixcloutier.com/x86/cmps:cmpsb:cmpsw:cmpsd:cmpsq
     auto cmpsq() => emit!0(0x48, 0xa7);
 
+    /// www.felixcloutier.com/x86/scas:scasb:scasw:scasd:scasq
     @("m8")
     auto scas(Mem!8 dst) => emit!0(0xae, dst);
     @("m16")
@@ -1348,11 +1521,16 @@
     @("m64")
     auto scas(Mem!64 dst) => emit!0(0xaf, dst);
 
+    /// www.felixcloutier.com/x86/scas:scasb:scasw:scasd:scasq
     auto scasb() => emit!0(0xae);
+    /// www.felixcloutier.com/x86/scas:scasb:scasw:scasd:scasq
     auto scasw() => emit!0(0x66, 0xaf);
+    /// www.felixcloutier.com/x86/scas:scasb:scasw:scasd:scasq
     auto scasd() => emit!0(0xaf);
+    /// www.felixcloutier.com/x86/scas:scasb:scasw:scasd:scasq
     auto scasq() => emit!0(0x48, 0xaf);
 
+    /// www.felixcloutier.com/x86/lods:lodsb:lodsw:lodsd:lodsq
     @("m8")
     auto lods(Mem!8 dst) => emit!0(0xac, dst);
     @("m16")
@@ -1362,11 +1540,16 @@
     @("m64")
     auto lods(Mem!64 dst) => emit!0(0xad, dst);
 
+    /// www.felixcloutier.com/x86/lods:lodsb:lodsw:lodsd:lodsq
     auto lodsb() => emit!0(0xac);
+    /// www.felixcloutier.com/x86/lods:lodsb:lodsw:lodsd:lodsq
     auto lodsw() => emit!0(0x66, 0xad);
+    /// www.felixcloutier.com/x86/lods:lodsb:lodsw:lodsd:lodsq
     auto lodsd() => emit!0(0xad);
+    /// www.felixcloutier.com/x86/lods:lodsb:lodsw:lodsd:lodsq
     auto lodsq() => emit!0(0x48, 0xad);
 
+    /// www.felixcloutier.com/x86/stos:stosb:stosw:stosd:stosq
     @("m8")
     auto stos(Mem!8 dst) => emit!0(0xaa, dst);
     @("m16")
@@ -1376,19 +1559,28 @@
     @("m64")
     auto stos(Mem!64 dst) => emit!0(0xab, dst);
 
+    /// www.felixcloutier.com/x86/stos:stosb:stosw:stosd:stosq
     auto stosb() => emit!0(0xaa);
+    /// www.felixcloutier.com/x86/stos:stosb:stosw:stosd:stosq
     auto stosw() => emit!0(0x66, 0xab);
+    /// www.felixcloutier.com/x86/stos:stosb:stosw:stosd:stosq
     auto stosd() => emit!0(0xab);
+    /// www.felixcloutier.com/x86/stos:stosb:stosw:stosd:stosq
     auto stosq() => emit!0(0x48, 0xab);
 
+    /// www.felixcloutier.com/x86/in
     @("imm8")
     auto inal(ubyte imm8) => emit!0(0xe4, imm8);
+    /// www.felixcloutier.com/x86/in
     auto inal() => emit!0(0xec);
 
+    /// www.felixcloutier.com/x86/in
     @("imm8")
     auto _in(ubyte imm8) => emit!0(0xe5, imm8);
+    /// www.felixcloutier.com/x86/in
     auto _in() => emit!0(0xed);
 
+    /// www.felixcloutier.com/x86/ins:insb:insw:insd
     @("m8")
     auto ins(Mem!8 dst) => emit!0(0x6c, dst);
     @("m16")
@@ -1396,18 +1588,26 @@
     @("m32")
     auto ins(Mem!32 dst) => emit!0(0x6d, dst);
 
+    /// www.felixcloutier.com/x86/ins:insb:insw:insd
     auto insb() => emit!0(0x6c);
+    /// www.felixcloutier.com/x86/ins:insb:insw:insd
     auto insw() => emit!0(0x66, 0x6d);
+    /// www.felixcloutier.com/x86/ins:insb:insw:insd
     auto insd() => emit!0(0x6d);
     
+    /// www.felixcloutier.com/x86/out
     @("imm8")
     auto outal(ubyte imm8) => emit!0(0xe6, imm8);
+    /// www.felixcloutier.com/x86/out
     auto outal() => emit!0(0xee);
 
+    /// www.felixcloutier.com/x86/out
     @("imm8")
     auto _out(ubyte imm8) => emit!0(0xe7, imm8);
+    /// www.felixcloutier.com/x86/out
     auto _out() => emit!0(0xef);
 
+    /// www.felixcloutier.com/x86/outs:outsb:outsw:outsd
     @("m8")
     auto outs(Mem!8 dst) => emit!0(0x6e, dst);
     @("m16")
@@ -1415,68 +1615,101 @@
     @("m32")
     auto outs(Mem!32 dst) => emit!0(0x6f, dst);
 
+    /// www.felixcloutier.com/x86/outs:outsb:outsw:outsd
     auto outsb() => emit!0(0x6e);
+    /// www.felixcloutier.com/x86/outs:outsb:outsw:outsd
     auto outsw() => emit!0(0x66, 0x6f);
+    /// www.felixcloutier.com/x86/outs:outsb:outsw:outsd
     auto outsd() => emit!0(0x6f);
 
+    /// www.felixcloutier.com/x86/setcc
     @("rm8")
     auto seta(RM)(RM dst) if (valid!(RM, 8)) => emit!0(0x0f, 0x97, dst);
+    /// www.felixcloutier.com/x86/setcc
     @("rm8")
     auto setae(RM)(RM dst) if (valid!(RM, 8)) => emit!0(0x0f, 0x93, dst);
+    /// www.felixcloutier.com/x86/setcc
     @("rm8")
     auto setb(RM)(RM dst) if (valid!(RM, 8)) => emit!0(0x0f, 0x92, dst);
+    /// www.felixcloutier.com/x86/setcc
     @("rm8")
     auto setbe(RM)(RM dst) if (valid!(RM, 8)) => emit!0(0x0f, 0x96, dst);
+    /// www.felixcloutier.com/x86/setcc
     @("rm8")
     auto setc(RM)(RM dst) if (valid!(RM, 8)) => emit!0(0x0f, 0x92, dst);
+    /// www.felixcloutier.com/x86/setcc
     @("rm8")
     auto sete(RM)(RM dst) if (valid!(RM, 8)) => emit!0(0x0f, 0x94, dst);
+    /// www.felixcloutier.com/x86/setcc
     @("rm8")
     auto setg(RM)(RM dst) if (valid!(RM, 8)) => emit!0(0x0f, 0x9f, dst);
+    /// www.felixcloutier.com/x86/setcc
     @("rm8")
     auto setge(RM)(RM dst) if (valid!(RM, 8)) => emit!0(0x0f, 0x9d, dst);
+    /// www.felixcloutier.com/x86/setcc
     @("rm8")
     auto setl(RM)(RM dst) if (valid!(RM, 8)) => emit!0(0x0f, 0x9c, dst);
+    /// www.felixcloutier.com/x86/setcc
     @("rm8")
     auto setle(RM)(RM dst) if (valid!(RM, 8)) => emit!0(0x0f, 0x9e, dst);
+    /// www.felixcloutier.com/x86/setcc
     @("rm8")
     auto setna(RM)(RM dst) if (valid!(RM, 8)) => emit!0(0x0f, 0x96, dst);
+    /// www.felixcloutier.com/x86/setcc
     @("rm8")
     auto setnae(RM)(RM dst) if (valid!(RM, 8)) => emit!0(0x0f, 0x92, dst);
+    /// www.felixcloutier.com/x86/setcc
     @("rm8")
     auto setnb(RM)(RM dst) if (valid!(RM, 8)) => emit!0(0x0f, 0x93, dst);
+    /// www.felixcloutier.com/x86/setcc
     @("rm8")
     auto setnbe(RM)(RM dst) if (valid!(RM, 8)) => emit!0(0x0f, 0x97, dst);
+    /// www.felixcloutier.com/x86/setcc
     @("rm8")
     auto setnc(RM)(RM dst) if (valid!(RM, 8)) => emit!0(0x0f, 0x93, dst);
+    /// www.felixcloutier.com/x86/setcc
     @("rm8")
     auto setne(RM)(RM dst) if (valid!(RM, 8)) => emit!0(0x0f, 0x95, dst);
+    /// www.felixcloutier.com/x86/setcc
     @("rm8")
     auto setng(RM)(RM dst) if (valid!(RM, 8)) => emit!0(0x0f, 0x9e, dst);
+    /// www.felixcloutier.com/x86/setcc
     @("rm8")
     auto setnge(RM)(RM dst) if (valid!(RM, 8)) => emit!0(0x0f, 0x9c, dst);
+    /// www.felixcloutier.com/x86/setcc
     @("rm8")
     auto setnl(RM)(RM dst) if (valid!(RM, 8)) => emit!0(0x0f, 0x9d, dst);
+    /// www.felixcloutier.com/x86/setcc
     @("rm8")
     auto setnle(RM)(RM dst) if (valid!(RM, 8)) => emit!0(0x0f, 0x9f, dst);
+    /// www.felixcloutier.com/x86/setcc
     @("rm8")
     auto setno(RM)(RM dst) if (valid!(RM, 8)) => emit!0(0x0f, 0x91, dst);
+    /// www.felixcloutier.com/x86/setcc
     @("rm8")
     auto setnp(RM)(RM dst) if (valid!(RM, 8)) => emit!0(0x0f, 0x9b, dst);
+    /// www.felixcloutier.com/x86/setcc
     @("rm8")
     auto setns(RM)(RM dst) if (valid!(RM, 8)) => emit!0(0x0f, 0x99, dst);
+    /// www.felixcloutier.com/x86/setcc
     @("rm8")
     auto setnz(RM)(RM dst) if (valid!(RM, 8)) => emit!0(0x0f, 0x95, dst);
+    /// www.felixcloutier.com/x86/setcc
     @("rm8")
     auto seto(RM)(RM dst) if (valid!(RM, 8)) => emit!0(0x0f, 0x90, dst);
+    /// www.felixcloutier.com/x86/setcc
     @("rm8")
     auto setp(RM)(RM dst) if (valid!(RM, 8)) => emit!0(0x0f, 0x9a, dst);
+    /// www.felixcloutier.com/x86/setcc
     @("rm8")
     auto setpe(RM)(RM dst) if (valid!(RM, 8)) => emit!0(0x0f, 0x9a, dst);
+    /// www.felixcloutier.com/x86/setcc
     @("rm8")
     auto setpo(RM)(RM dst) if (valid!(RM, 8)) => emit!0(0x0f, 0x9b, dst);
+    /// www.felixcloutier.com/x86/setcc
     @("rm8")
     auto sets(RM)(RM dst) if (valid!(RM, 8)) => emit!0(0x0f, 0x98, dst);
+    /// www.felixcloutier.com/x86/setcc
     @("rm8")
     auto setz(RM)(RM dst) if (valid!(RM, 8)) => emit!0(0x0f, 0x94, dst);
 
