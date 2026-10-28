@@ -1115,6 +1115,9 @@
     /// www.felixcloutier.com/x86/sysexit
     auto sysexitc() => emit!0(0x0f, 0x35);
     /// www.felixcloutier.com/x86/sysexit
+    static if (X64)
+    auto sysexit() => emit!0(0x48, 0x0f, 0x35);
+    static if (!X64)
     auto sysexit() => emit!0(0x0f, 0x35);
 
     /* ====== CMOV ====== */

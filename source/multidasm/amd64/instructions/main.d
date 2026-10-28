@@ -372,6 +372,9 @@
     /// www.felixcloutier.com/x86/sysret
     auto sysretc() => emit!0(0x0f, 0x07);
     /// www.felixcloutier.com/x86/sysret
+    static if (X64)
+    auto sysret() => emit!0(0x48, 0x0f, 0x07);
+    static if (!X64)
     auto sysret() => emit!0(0x0f, 0x07);
     /// www.felixcloutier.com/x86/syscall
     auto syscall() => emit!0(0x0f, 0x05);
