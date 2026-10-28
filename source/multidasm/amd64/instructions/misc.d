@@ -1408,7 +1408,7 @@
     @("m64")
     auto rstorssp(Mem!64 dst) => emit!5(0xf3, 0x0f, 0x01, dst);
     /// www.felixcloutier.com/x86/saveprevssp
-    auto saveprevssp() => emit!0(0xf3, 0x0f, 0x01, 0xae);
+    auto saveprevssp() => emit!0(0xf3, 0x0f, 0x01, 0xea);
 
     /// www.felixcloutier.com/x86/endbr32
     auto endbr32() => emit!0(0xf3, 0x0f, 0x1e, 0xfb);
