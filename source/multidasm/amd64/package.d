@@ -369,6 +369,7 @@ public:
             "jb1": [0x72],
             "jbe1": [0x76],
             "jc1": [0x72],
+            "jcxz1": [0xe3],
             "jecxz1": [0xE3],
             "jrcxz1": [0xE3],
             "je1": [0x74],
