@@ -367,13 +367,13 @@
 
     /// www.felixcloutier.com/x86/bndmov
     @("r32", "rm32")
-    auto bndmov(RM)(R32 dst, RM src) if (valid!(RM, 32)) => emit!0(0x0f, 0x1a, dst, src);
+    auto bndmov(RM)(R32 dst, RM src) if (valid!(RM, 32)) => emit!0(0x66, 0x0f, 0x1a, dst, src);
     @("r64", "rm64")
-    auto bndmov(RM)(R64 dst, RM src) if (valid!(RM, 64)) => emit!0(0x0f, 0x1a, dst, src);
+    auto bndmov(RM)(R64 dst, RM src) if (valid!(RM, 64)) => emit!0(0x66, 0x0f, 0x1a, dst, src);
     @("m32", "r32")
-    auto bndmov(Mem!32 dst, R32 src) => emit!0(0x0f, 0x1b, dst, src);
+    auto bndmov(Mem!32 dst, R32 src) => emit!0(0x66, 0x0f, 0x1b, dst, src);
     @("m64", "r32")
-    auto bndmov(Mem!64 dst, R32 src) => emit!0(0x0f, 0x1b, dst, src);
+    auto bndmov(Mem!64 dst, R32 src) => emit!0(0x66, 0x0f, 0x1b, dst, src);
 
     /// www.felixcloutier.com/x86/bound
     @("r16", "rm16")
