@@ -954,9 +954,9 @@
     /// www.felixcloutier.com/x86/fnop
     auto fnop() => emit!0(0xd9, 0xd0);
     /// www.felixcloutier.com/x86/finit:fninit
-    auto fninit() => emit!0(0x9b, 0xdb, 0xe3);
+    auto fninit() => emit!0(0xdb, 0xe3);
     /// www.felixcloutier.com/x86/finit:fninit
-    auto finit() => emit!0(0xdb, 0xe3);
+    auto finit() => emit!0(0x9b, 0xdb, 0xe3);
 
     /// www.felixcloutier.com/x86/fsave:fnsave
     @("m752")
