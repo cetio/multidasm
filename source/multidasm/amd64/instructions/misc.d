@@ -1491,7 +1491,7 @@
     auto umonitor(R64 dst) => emit!6(0xf3, 0x0f, 0xae, dst);
     /// www.felixcloutier.com/x86/tpause
     @("r32")
-    auto tpause(R32 dst) => emit!6(0x0f, 0xae, dst);
+    auto tpause(R32 dst) => emit!6(0x66, 0x0f, 0xae, dst);
 
     /* ====== CLDEMOTE ====== */
     
