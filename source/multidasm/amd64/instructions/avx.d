@@ -43,8 +43,8 @@
     // Zero upper 128 bits of all YMM registers (AVX state cleanup)
     // VEX.256.0F.WIG 77 /r where /r = C0 (mod=11, reg=000, r/m=000)
     /// www.felixcloutier.com/x86/vzeroall
-    auto vzeroall() => emit!0(0xc5, 0xfc, 0x77, 0xc0);
+    auto vzeroall() => emit!0(0xc5, 0xfc, 0x77);
     // Zero upper 128 bits of YMM0-YMM15
     // VEX.128.0F.WIG 77 /r where /r = C0 (mod=11, reg=000, r/m=000)
     /// www.felixcloutier.com/x86/vzeroupper
-    auto vzeroupper() => emit!0(0xc5, 0xf8, 0x77, 0xc0);
+    auto vzeroupper() => emit!0(0xc5, 0xf8, 0x77);
