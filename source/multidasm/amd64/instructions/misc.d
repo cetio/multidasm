@@ -400,9 +400,9 @@
 
     /// www.felixcloutier.com/x86/invpcid
     @("r32", "m128")
-    auto invpcid(R32 dst, Mem!128 src) => emit!0(0x0f, 0x38, 0x82, dst, src);
+    auto invpcid(R32 dst, Mem!128 src) => emit!0(0x66, 0x0f, 0x38, 0x82, dst, src);
     @("r64", "m128")
-    auto invpcid(R64 dst, Mem!128 src) => emit!0(0x0f, 0x38, 0x82, dst, src);
+    auto invpcid(R64 dst, Mem!128 src) => emit!0(0x66, 0x0f, 0x38, 0x82, dst, src);
 
     /* ====== HLE ====== */
 
