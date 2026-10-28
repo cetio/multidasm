@@ -170,34 +170,73 @@ public:
                     dst = DST(stor.register);
                 }
 
-                static if (isInstanceOf!(Reg, SRC))
+                static if (isInstanceOf!(Reg, STOR) || isInstanceOf!(Mem, STOR))
                 {
-                    static if ((SELECTOR & INT) != 0)
-                        we = !is(SRC == Reg!32);
+                    // Three operands: src sits in modrm.reg; dst was rewritten
+                    // above to the r/m operand.
+                    static if (isInstanceOf!(Reg, SRC))
+                    {
+                        static if ((SELECTOR & INT) != 0)
+                            we = !is(SRC == Reg!32);
 
-                    b = src.index >= 8;
-                }
-                else static if (isInstanceOf!(Mem, SRC))
-                {
-                    static if ((SELECTOR & INT) != 0)
-                        we = !is(SRC == Mem!32);
+                        r = src.index >= 8;
+                    }
+                    else static if (isInstanceOf!(Mem, SRC))
+                    {
+                        static if ((SELECTOR & INT) != 0)
+                            we = !is(SRC == Mem!32);
 
-                    b = src.register >= 8;
-                }
-                
-                static if (isInstanceOf!(Reg, DST))
-                {
+                        b = src.register >= 8;
+                    }
+
                     static if ((SELECTOR & INT) != 0)
                         we = !is(DST == Reg!32);
-
-                    r = dst.index >= 8;
+                    b = dst.index >= 8;
                 }
-                else static if (isInstanceOf!(Mem, DST))
+                else static if (isInstanceOf!(Reg, DST) && isInstanceOf!(Mem, SRC))
                 {
+                    // Two operands (reg, mem): reg field = dst, r/m = src.
                     static if ((SELECTOR & INT) != 0)
-                        we = !is(DST == Mem!32);
+                        we = !is(DST == Reg!32);
+                    r = dst.index >= 8;
 
-                    x = dst.register >= 8;
+                    static if ((SELECTOR & INT) != 0)
+                        we = !is(SRC == Mem!32);
+                    b = src.register >= 8;
+                }
+                else
+                {
+                    // Two operands (mem, reg) / (reg, reg) or one operand:
+                    // reg field = src, r/m = dst.
+                    static if (isInstanceOf!(Reg, SRC))
+                    {
+                        static if ((SELECTOR & INT) != 0)
+                            we = !is(SRC == Reg!32);
+
+                        r = src.index >= 8;
+                    }
+                    else static if (isInstanceOf!(Mem, SRC))
+                    {
+                        static if ((SELECTOR & INT) != 0)
+                            we = !is(SRC == Mem!32);
+
+                        b = src.register >= 8;
+                    }
+
+                    static if (isInstanceOf!(Reg, DST))
+                    {
+                        static if ((SELECTOR & INT) != 0)
+                            we = !is(DST == Reg!32);
+
+                        b = dst.index >= 8;
+                    }
+                    else static if (isInstanceOf!(Mem, DST))
+                    {
+                        static if ((SELECTOR & INT) != 0)
+                            we = !is(DST == Mem!32);
+
+                        b = dst.register >= 8;
+                    }
                 }
 
                 static if (isInstanceOf!(Mem, SRC))
@@ -220,7 +259,7 @@ public:
                         we = false;
 
                     vex ~= 0xc4;
-                    vex ~= (cast(ubyte)(((r ? 0 : 1) << 5) | ((x ? 0 : 1) << 6) | ((b ? 0 : 1) << 7))) |
+                    vex ~= (cast(ubyte)(((r ? 0 : 1) << 7) | ((x ? 0 : 1) << 6) | ((b ? 0 : 1) << 5))) |
                         (map_select & 0b00011111);
                 }
                 else
