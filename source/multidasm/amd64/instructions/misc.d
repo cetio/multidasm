@@ -312,9 +312,9 @@
 
     /// www.felixcloutier.com/x86/adcx
     @("r32", "rm32")
-    auto adcx(RM)(R32 dst, RM src) if (valid!(RM, 32)) => emit!0(0x0F, 0x38, 0xF6, dst, src);
+    auto adcx(RM)(R32 dst, RM src) if (valid!(RM, 32)) => emit!0(0x66, 0x0F, 0x38, 0xF6, dst, src);
     @("r64", "rm64")
-    auto adcx(RM)(R64 dst, RM src) if (valid!(RM, 64)) => emit!0(0x0F, 0x38, 0xF6, dst, src);
+    auto adcx(RM)(R64 dst, RM src) if (valid!(RM, 64)) => emit!0(0x66, 0x0F, 0x38, 0xF6, dst, src);
 
     /// www.felixcloutier.com/x86/adox
     @("r32", "rm32")
