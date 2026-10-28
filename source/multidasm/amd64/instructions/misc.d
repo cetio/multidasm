@@ -1394,15 +1394,15 @@
 
     /// www.felixcloutier.com/x86/wrssd:wrssq
     @("m32", "r32")
-    auto wrssd(Mem!32 dst, R32 src) => emit!0(0xf3, 0x0f, 0x38, 0xf6, dst, src);
+    auto wrssd(Mem!32 dst, R32 src) => emit!0(0x0f, 0x38, 0xf6, dst, src);
     @("m64", "r64")
-    auto wrssq(Mem!64 dst, R64 src) => emit!0(0xf3, 0x0f, 0x38, 0xf6, dst, src);
+    auto wrssq(Mem!64 dst, R64 src) => emit!0(0x0f, 0x38, 0xf6, dst, src);
 
     /// www.felixcloutier.com/x86/wrussd:wrussq
     @("m32", "r32")
-    auto wrussd(Mem!32 dst, R32 src) => emit!1(0x66, 0xf3, 0x0f, 0x38, 0xf5, dst, src);
+    auto wrussd(Mem!32 dst, R32 src) => emit!0(0x66, 0x0f, 0x38, 0xf5, dst, src);
     @("m64", "r64")
-    auto wrussq(Mem!64 dst, R64 src) => emit!1(0x66, 0xf3, 0x0f, 0x38, 0xf5, dst, src);
+    auto wrussq(Mem!64 dst, R64 src) => emit!0(0x66, 0x0f, 0x38, 0xf5, dst, src);
 
     /// www.felixcloutier.com/x86/rstorssp
     @("m64")
