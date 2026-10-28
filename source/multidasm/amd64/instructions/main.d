@@ -984,7 +984,7 @@
     @("rm32", "imm32")
     auto test(RM)(RM dst, uint imm32) if (valid!(RM, 32)) => emit!0(0xf7, dst, imm32);
     @("rm64", "imm32")
-    auto test(RM)(RM dst, uint imm32) if (valid!(RM, 64)) => emit!0(0xf7, dst, cast(long)imm32);
+    auto test(RM)(RM dst, uint imm32) if (valid!(RM, 64)) => emit!0(0xf7, dst, imm32);
 
     @("rm8", "r8")
     auto test(RM)(RM dst, R8 src) if (valid!(RM, 8)) => emit!(0, FLIP)(0x84, dst, src);
