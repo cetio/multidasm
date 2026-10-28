@@ -14,7 +14,7 @@
 		{
 			"name": "library",
 			"targetType": "library",
-			"excludedSourceFiles": ["source/multidasm/amd64/instructions/*", "source/multidasm/mips/instructions/*"]
+			"excludedSourceFiles": ["source/multidasm/amd64/instructions/*", "source/multidasm/mips/instructions/*", "source/tests/*"]
 		},
 		{
 			"name": "test-amd64",
@@ -22,7 +22,9 @@
 			"excludedSourceFiles": [
 				"source/multidasm/amd64/instructions/*",
 				"source/multidasm/mips/*",
-				"source/multidasm/cil.d"
+				"source/multidasm/cil.d",
+				"source/tests/mips.d",
+				"source/tests/cil.d"
 			]
 		},
 		{
@@ -31,7 +33,9 @@
 			"excludedSourceFiles": [
 				"source/multidasm/amd64/*",
 				"source/multidasm/mips/instructions/*",
-				"source/multidasm/cil.d"
+				"source/multidasm/cil.d",
+				"source/tests/amd64.d",
+				"source/tests/cil.d"
 			]
 		},
 		{
@@ -39,7 +43,9 @@
 			"targetType": "library",
 			"excludedSourceFiles": [
 				"source/multidasm/amd64/*",
-				"source/multidasm/mips/*"
+				"source/multidasm/mips/*",
+				"source/tests/amd64.d",
+				"source/tests/mips.d"
 			]
 		}
 	]
