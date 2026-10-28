@@ -16,7 +16,7 @@ final:
     ubyte[] buffer;
 
 public:
-    template emit(ubyte OP, ubyte SELECTOR = 0, ubyte SIZE = 128, ubyte MAP = 1, ubyte PREFIX = 0)
+    template emit(ubyte OP, ubyte SELECTOR = 0, short SIZE = 128, ubyte MAP = 1, ubyte PREFIX = 0)
     {
         size_t emit(ARGS...)(ARGS args)
         {
