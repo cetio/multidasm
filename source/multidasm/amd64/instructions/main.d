@@ -1097,11 +1097,11 @@
 
     /// www.felixcloutier.com/x86/xchg
     @("r16")
-    auto xchg(R16 dst) => emit!(0, ENCODED)(90, dst);
+    auto xchg(R16 dst) => emit!(0, ENCODED)(0x90, dst);
     @("r32")
-    auto xchg(R32 dst) => emit!(0, ENCODED)(90, dst);
+    auto xchg(R32 dst) => emit!(0, ENCODED)(0x90, dst);
     @("r64")
-    auto xchg(R64 dst) => emit!(0, ENCODED)(90, dst);
+    auto xchg(R64 dst) => emit!(0, ENCODED)(0x90, dst);
 
     @("rm8", "rm8")
     auto xchg(A, B)(A dst, B src) if (valid!(A, 8) && valid!(B, 8)) => emit!0(0x86, dst, src);
