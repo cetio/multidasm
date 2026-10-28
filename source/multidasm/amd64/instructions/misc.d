@@ -743,9 +743,9 @@
     auto ficom(Mem!32 dst) => emit!(2, NO_REX)(0xda, dst);
     /// www.felixcloutier.com/x86/ficom:ficomp
     @("m16")
-    auto ficomp(Mem!16 dst) => emit!(2, NO_REX)(0xde, dst);
+    auto ficomp(Mem!16 dst) => emit!(3, NO_REX)(0xde, dst);
     @("m32")
-    auto ficomp(Mem!32 dst) => emit!(2, NO_REX)(0xda, dst);
+    auto ficomp(Mem!32 dst) => emit!(3, NO_REX)(0xda, dst);
     
     /// www.felixcloutier.com/x86/fucom:fucomp:fucompp
     @("st")
