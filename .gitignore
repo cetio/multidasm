@@ -1,7 +1,4 @@
 .dub
-docs.json
-__dummy.html
-/multidasm
 multidasm.so
 multidasm.dylib
 multidasm.dll
@@ -15,5 +12,4 @@ multidasm-test-*
 *.lst
 *.a
 *.so
-bin/*
-!bin/.gitkeep
+bin/
