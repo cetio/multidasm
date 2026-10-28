@@ -25,4 +25,4 @@ jobs:
           compiler: ${{ matrix.compiler }}
 
       - name: Run ${{ matrix.suite }} tests
-        run: dub test -c ${{ matrix.suite }}
+        run: dub run -c ${{ matrix.suite }}

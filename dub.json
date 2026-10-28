@@ -18,34 +18,52 @@
 		},
 		{
 			"name": "test-amd64",
-			"targetType": "library",
+			"targetType": "executable",
+			"buildOptions": ["unittests"],
+			"mainSourceFile": "bin/ut.d",
+			"preBuildCommands": ["$DUB run unit-threaded -c gen_ut_main -- -f bin/ut.d source/tests/amd64"],
+			"dependencies": {
+				"unit-threaded": "~>2.2.6"
+			},
 			"excludedSourceFiles": [
 				"source/multidasm/amd64/instructions/*",
 				"source/multidasm/mips/*",
 				"source/multidasm/cil.d",
-				"source/tests/mips.d",
-				"source/tests/cil.d"
+				"source/tests/mips/*",
+				"source/tests/cil/*"
 			]
 		},
 		{
 			"name": "test-mips",
-			"targetType": "library",
+			"targetType": "executable",
+			"buildOptions": ["unittests"],
+			"mainSourceFile": "bin/ut.d",
+			"preBuildCommands": ["$DUB run unit-threaded -c gen_ut_main -- -f bin/ut.d source/tests/mips"],
+			"dependencies": {
+				"unit-threaded": "~>2.2.6"
+			},
 			"excludedSourceFiles": [
 				"source/multidasm/amd64/*",
 				"source/multidasm/mips/instructions/*",
 				"source/multidasm/cil.d",
-				"source/tests/amd64.d",
-				"source/tests/cil.d"
+				"source/tests/amd64/*",
+				"source/tests/cil/*"
 			]
 		},
 		{
 			"name": "test-cil",
-			"targetType": "library",
+			"targetType": "executable",
+			"buildOptions": ["unittests"],
+			"mainSourceFile": "bin/ut.d",
+			"preBuildCommands": ["$DUB run unit-threaded -c gen_ut_main -- -f bin/ut.d source/tests/cil"],
+			"dependencies": {
+				"unit-threaded": "~>2.2.6"
+			},
 			"excludedSourceFiles": [
 				"source/multidasm/amd64/*",
 				"source/multidasm/mips/*",
-				"source/tests/amd64.d",
-				"source/tests/mips.d"
+				"source/tests/amd64/*",
+				"source/tests/mips/*"
 			]
 		}
 	]
