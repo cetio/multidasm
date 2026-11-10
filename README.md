@@ -14,15 +14,13 @@
 
 Multidasm is a quick, dynamic comptime assembler for D. It targets CIL, x86, x86_64, and MIPS with minimal overhead and maximal throughput. Each backend uses a `Block` type, instruction methods, optional `label(name)`, and `finalize()` to produce assembled bytes.
 
-## Modules
+## Installation
 
-Per-assembler documentation:
+```sh
+dub add multidasm
+```
 
-- [AMD64](docs/AMD64.md) - Register and memory operands, REX/VEX prefixes, instruction encoding.
-- [MIPS](docs/MIPS.md) - GPRs, I-type/J-type/R-type encoding, branch and jump label patching.
-- [CIL](docs/CIL.md) - Stack-based opcodes, branch labels, prefixes, metadata tokens.
-
-## Usage
+## Quick Start
 
 ### AMD64
 
@@ -88,6 +86,14 @@ with (code)
 ubyte[] assembled = code.finalize();
 ```
 
+## Modules
+
+Per-assembler documentation:
+
+- [AMD64](docs/AMD64.md) - Register and memory operands, REX/VEX prefixes, instruction encoding.
+- [MIPS](docs/MIPS.md) - GPRs, I-type/J-type/R-type encoding, branch and jump label patching.
+- [CIL](docs/CIL.md) - Stack-based opcodes, branch labels, prefixes, metadata tokens.
+
 ## Roadmap
 
 **Oops, there's no formal roadmap!**
@@ -101,6 +107,10 @@ ubyte[] assembled = code.finalize();
 - [ ] z80
 - [ ] IR
 - [ ] Runtime assembling
+
+## Development
+
+See [Contributing](CONTRIBUTING.md) for change guidelines and [Testing](TESTING.md) for build and test commands.
 
 ## License
 
