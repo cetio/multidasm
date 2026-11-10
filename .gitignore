@@ -1,4 +1,7 @@
 .dub
+.env
+/site/
+/docs/api/
 multidasm.so
 multidasm.dylib
 multidasm.dll

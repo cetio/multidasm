@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+
 jobs:
   test:
     name: ${{ matrix.suite }} (${{ matrix.compiler }})
@@ -24,5 +27,19 @@ jobs:
         with:
           compiler: ${{ matrix.compiler }}
 
+      - name: Cache DUB packages and build cache
+        uses: actions/cache@v4
+        env:
+          DUB_CACHE_KEY: dub-v1-${{ runner.os }}-${{ runner.arch }}-${{ matrix.compiler }}
+        with:
+          path: |
+            ${{ runner.temp }}/dub/packages
+            ${{ runner.temp }}/dub/cache
+          key: ${{ env.DUB_CACHE_KEY }}-${{ hashFiles('dub.json', 'dub.selections.json') }}
+          restore-keys: |
+            ${{ env.DUB_CACHE_KEY }}-
+
       - name: Run ${{ matrix.suite }} tests
+        env:
+          DUB_HOME: ${{ runner.temp }}/dub
         run: dub run -c ${{ matrix.suite }}
