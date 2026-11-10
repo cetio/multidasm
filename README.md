@@ -1,16 +1,9 @@
 # Multidasm
 
-[![AMD64 - 79%](https://img.shields.io/static/v1?label=AMD64&message=79%&color=green&style=for-the-badge)](https://)
-[![MIPS - 27%](https://img.shields.io/static/v1?label=MIPS&message=27%&color=orange&style=for-the-badge)](https://)
-[![CIL - 100%](https://img.shields.io/static/v1?label=CIL&message=100%&color=brightgreen&style=for-the-badge)](https://)
-
-[![DUB](https://img.shields.io/badge/DUB-red?style=for-the-badge&logo=hackthebox&logoColor=white)](https://code.dlang.org/packages/multidasm)
-
-[![License](https://img.shields.io/badge/License-Apache--2.0-blue)](LICENSE.txt)
-[![CI](https://github.com/cetio/multidasm/actions/workflows/ci.yml/badge.svg)](https://github.com/cetio/multidasm/actions/workflows/ci.yml)
+[![DUB](https://img.shields.io/badge/DUB-package-red)](https://code.dlang.org/packages/multidasm) [![License](https://img.shields.io/badge/License-Apache--2.0-blue)](LICENSE.txt) [![CI](https://github.com/cetio/multidasm/actions/workflows/ci.yml/badge.svg)](https://github.com/cetio/multidasm/actions/workflows/ci.yml)
 
 > [!NOTE]
-> Multidasm currently doesn't support runtime assembling. This is planned for the future.
+> Runtime assembly is not currently supported; it is planned for the future.
 
 Multidasm is a quick, dynamic comptime assembler for D. It targets CIL, x86, x86_64, and MIPS with minimal overhead and maximal throughput. Each backend uses a `Block` type, instruction methods, optional `label(name)`, and `finalize()` to produce assembled bytes.
 
@@ -22,7 +15,7 @@ dub add multidasm
 
 ## Quick Start
 
-### AMD64
+### AMD64 ([reference](docs/AMD64.md))
 
 Use `Block!false` for x86 and `Block!true` for x86_64. Registers are sized (`Reg!8`, `Reg!16`, `Reg!32`, `Reg!64`) and memory operands use `Mem!(size)`.
 
@@ -40,7 +33,7 @@ with (code)
 ubyte[] assembled = code.finalize();
 ```
 
-### MIPS
+### MIPS ([reference](docs/MIPS.md))
 
 MIPS uses `Block` with `GPR` registers and `Mem` operands. Output is big-endian. Labels are resolved automatically in `finalize()`.
 
@@ -60,7 +53,7 @@ with (code)
 ubyte[] assembled = code.finalize();
 ```
 
-### CIL
+### CIL ([reference](docs/CIL.md))
 
 CIL uses `Block` with stack-based opcodes. Branches and switches use string labels patched during `finalize()`.
 
@@ -86,31 +79,9 @@ with (code)
 ubyte[] assembled = code.finalize();
 ```
 
-## Modules
-
-Per-assembler documentation:
-
-- [AMD64](docs/AMD64.md) - Register and memory operands, REX/VEX prefixes, instruction encoding.
-- [MIPS](docs/MIPS.md) - GPRs, I-type/J-type/R-type encoding, branch and jump label patching.
-- [CIL](docs/CIL.md) - Stack-based opcodes, branch labels, prefixes, metadata tokens.
-
-## Roadmap
-
-**Oops, there's no formal roadmap!**
-
-- [x] x86
-- [x] x86_64
-- [ ] AVX-512
-- [x] CIL
-- [x] MIPS IV
-- [ ] ARM
-- [ ] z80
-- [ ] IR
-- [ ] Runtime assembling
-
 ## Development
 
-See [Contributing](CONTRIBUTING.md) for change guidelines and [Testing](TESTING.md) for build and test commands.
+See [CONTRIBUTING.md](CONTRIBUTING.md) and [TESTING.md](TESTING.md).
 
 ## License
 
