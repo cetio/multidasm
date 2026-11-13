@@ -502,13 +502,6 @@ public:
 
                 if (branchWidths[index] == 1 && (relative < byte.min || relative > byte.max))
                 {
-                    immutable string key = branch[2]~'2';
-                    assert(key in branchMap, "Branch offset out of range: "~branch[2]);
-                    branchWidths[index] = 2;
-                    changed = true;
-                }
-                else if (branchWidths[index] == 2 && (relative < short.min || relative > short.max))
-                {
                     immutable string key = branch[2]~'4';
                     assert(key in branchMap, "Branch offset out of range: "~branch[2]);
                     branchWidths[index] = 4;
@@ -523,6 +516,7 @@ public:
         {
             immutable size_t position = cast(size_t)branch[0] + inserted;
             immutable ptrdiff_t relative = labelPosition(branch[1]) - cast(ptrdiff_t)position - branchSize(index);
+            assert(relative >= int.min && relative <= int.max, "Branch offset out of range: "~branch[2]);
             immutable string key = branch[2]~cast(char)('0' + branchWidths[index]);
             ubyte[] encoded = branchMap[key].dup;
             encoded ~= nativeToLittleEndian(relative)[0..branchWidths[index]];
@@ -566,4 +560,3 @@ public:
     Mem!256 ymmwordPtr(ARGS...)(ARGS args) => Mem!256(args);
     Mem!512 zmmwordPtr(ARGS...)(ARGS args) => Mem!512(args);
 }
-

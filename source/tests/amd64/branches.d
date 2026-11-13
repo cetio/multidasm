@@ -3,6 +3,7 @@ module tests.amd64.branches;
 
 import multidasm.amd64;
 
+import core.exception : AssertError;
 import unit_threaded;
 
 @Name("resolves forward and backward branches")
@@ -104,6 +105,128 @@ unittest
         expected ~= 0x90;
 
     encoded.should == expected;
+}
+
+@Name("widens forward and backward jumps in both modes")
+unittest
+{
+    static foreach (X64; [false, true])
+    {
+        {
+            enum encoded = {
+                Block!X64 block;
+                with (block)
+                {
+                    label("start");
+                    jne("far");
+                    jmp("far");
+                    foreach (_; 0..130)
+                        nop();
+                    label("far");
+                    jne("start");
+                    jmp("start");
+                }
+                return block.finalize();
+            }();
+
+            ubyte[] expected = [0x0f, 0x85, 0x87, 0x00, 0x00, 0x00, 0xe9, 0x82, 0x00, 0x00, 0x00];
+            foreach (_; 0..130)
+                expected ~= 0x90;
+            expected ~= [0x0f, 0x85, 0x6d, 0xff, 0xff, 0xff, 0xe9, 0x68, 0xff, 0xff, 0xff];
+
+            encoded.should == expected;
+        }
+    }
+}
+
+@Name("selects branch widths at signed byte boundaries")
+unittest
+{
+    ubyte[] assemble(bool X64)(size_t padding, bool backward)
+    {
+        Block!X64 block;
+        if (backward)
+            block.label("target");
+        else
+            block.jne("target");
+        foreach (_; 0..padding)
+            block.nop();
+        if (backward)
+            block.jne("target");
+        else
+            block.label("target");
+        return block.finalize();
+    }
+
+    static foreach (X64; [false, true])
+    {
+        {
+            enum forward = assemble!X64(127, false);
+            enum backward = assemble!X64(126, true);
+            enum forwardWide = assemble!X64(128, false);
+            enum backwardWide = assemble!X64(127, true);
+
+            forward[0..2].should == [0x75, 0x7f];
+            forward.length.should == 129;
+            backward[$-2..$].should == [0x75, 0x80];
+            backward.length.should == 128;
+            forwardWide[0..6].should == [0x0f, 0x85, 0x80, 0x00, 0x00, 0x00];
+            forwardWide.length.should == 134;
+            backwardWide[$-6..$].should == [0x0f, 0x85, 0x7b, 0xff, 0xff, 0xff];
+            backwardWide.length.should == 133;
+        }
+    }
+}
+
+@Name("recalculates branch widths after another branch grows")
+unittest
+{
+    static foreach (X64; [false, true])
+    {
+        {
+            enum encoded = {
+                Block!X64 block;
+                with (block)
+                {
+                    jne("near");
+                    jmp("far");
+                    foreach (_; 0..125)
+                        nop();
+                    label("near");
+                    foreach (_; 0..10)
+                        nop();
+                    label("far");
+                }
+                return block.finalize();
+            }();
+
+            ubyte[] expected = [0x0f, 0x85, 0x82, 0x00, 0x00, 0x00, 0xe9, 0x87, 0x00, 0x00, 0x00];
+            foreach (_; 0..135)
+                expected ~= 0x90;
+
+            encoded.should == expected;
+        }
+    }
+}
+
+@Name("rejects undefined labels and out-of-range short-only branches")
+unittest
+{
+    Block!true missing;
+    missing.jne("missing");
+    missing.finalize().shouldThrow!AssertError;
+
+    static foreach (mnemonic; ["loop", "loope", "loopne", "jcxz", "jecxz", "jrcxz"])
+    {
+        {
+            Block!true block;
+            __traits(getMember, block, mnemonic)("far");
+            foreach (_; 0..128)
+                block.nop();
+            block.label("far");
+            block.finalize().shouldThrow!AssertError;
+        }
+    }
 }
 
 @Name("calls through memory with the near-call extension")
