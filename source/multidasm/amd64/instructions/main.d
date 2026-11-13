@@ -1293,19 +1293,25 @@
     @("imm32")
     auto call(uint rel32) => emit!0(0xe8, rel32);
 
+    static if (!X64)
     @("r16")
     auto call(R16 dst) => emit!2(0xff, dst);
+    static if (!X64)
     @("r32")
     auto call(R32 dst) => emit!2(0xff, dst);
+    static if (X64)
     @("r64")
-    auto call(R64 dst) => emit!2(0xff, dst);
+    auto call(R64 dst) => emit!(2, NO_REX_W)(0xff, dst);
 
+    static if (!X64)
     @("m16")
-    auto call(Mem!16 dst) => emit!3(0xff, dst);
+    auto call(Mem!16 dst) => emit!2(0xff, dst);
+    static if (!X64)
     @("m32")
-    auto call(Mem!32 dst) => emit!3(0xff, dst);
+    auto call(Mem!32 dst) => emit!2(0xff, dst);
+    static if (X64)
     @("m64")
-    auto call(Mem!64 dst) => emit!3(0xff, dst);
+    auto call(Mem!64 dst) => emit!(2, NO_REX_W)(0xff, dst);
 
     /// www.felixcloutier.com/x86/loop:loope:loopz:loopne:loopnz
     @("jump")

@@ -16,6 +16,10 @@ with (block) {
 ubyte[] enc = block.finalize();
 ```
 
+## Indirect Calls
+
+Indirect `call` operands must be 64-bit in `Block!true` (`call(rax)` or `call(qwordPtr(rbx))`) and 16- or 32-bit in `Block!false` (`call(ax)` or `call(dwordPtr(ebx))`). These forms emit near calls (`FF /2`), not far calls.
+
 ## Instructions
 
 | Mnemonic | Supported | Flags |

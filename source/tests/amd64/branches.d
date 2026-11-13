@@ -113,12 +113,69 @@ unittest
         Block!true block;
         with (block)
         {
-            call(dwordPtr(rbx));
+            call(qwordPtr(rbx));
         }
         return block.finalize();
     }();
 
     encoded.should == [0xff, 0x13];
+}
+
+@Name("calls through extended registers and memory without REX.W")
+unittest
+{
+    enum encoded = {
+        Block!true block;
+        with (block)
+        {
+            call(rax);
+            call(r9);
+            call(qwordPtr(r9));
+            call(qwordPtr(r9, 8));
+        }
+        return block.finalize();
+    }();
+
+    encoded.should == [
+        0xff, 0xd0,
+        0x41, 0xff, 0xd1,
+        0x41, 0xff, 0x11,
+        0x41, 0xff, 0x51, 0x08
+    ];
+}
+
+@Name("calls through word and doubleword operands in 32-bit mode")
+unittest
+{
+    enum encoded = {
+        Block!false block;
+        with (block)
+        {
+            call(ax);
+            call(eax);
+            call(wordPtr(ebx));
+            call(dwordPtr(ebx));
+        }
+        return block.finalize();
+    }();
+
+    encoded.should == [
+        0x66, 0xff, 0xd0,
+        0xff, 0xd0,
+        0x66, 0xff, 0x13,
+        0xff, 0x13
+    ];
+}
+
+@Name("rejects indirect calls with target widths invalid for the mode")
+unittest
+{
+    __traits(compiles, { Block!true block; block.call(ax); }).should == false;
+    __traits(compiles, { Block!true block; block.call(eax); }).should == false;
+    __traits(compiles, { Block!true block; block.call(wordPtr(rbx)); }).should == false;
+    __traits(compiles, { Block!true block; block.call(dwordPtr(rbx)); }).should == false;
+    __traits(compiles, { Block!false block; block.call(rax); }).should == false;
+    __traits(compiles, { Block!false block; block.call(qwordPtr(ebx)); }).should == false;
 }
 
 @Name("returns with a 16-bit immediate without an operand-size prefix")

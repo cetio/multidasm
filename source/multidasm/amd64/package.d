@@ -88,7 +88,7 @@ public:
                 {
                     hasRex |= dst.register >= 8;
                     w = is(DST == Mem!64);
-                    x = dst.register >= 8;
+                    b = dst.register >= 8;
                 }
 
                 // With NO_REX_W (e.g. push/pop r64), only emit REX when R/X/B are needed, not W.
