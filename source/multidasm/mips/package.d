@@ -9,6 +9,7 @@ import std.typecons;
 
 // https://www.cs.cmu.edu/afs/cs/academic/class/15740-f97/public/doc/mips-isa.pdf
 package:
+
 enum
 {
     s = 0b00000,
@@ -194,7 +195,6 @@ public:
 struct Block
 {
 package:
-final:
     ptrdiff_t[string] labels;
     Tuple!(size_t, string, string, ubyte, ubyte)[] branches;  // pos, label, kind, rs, rt (rt=0 for J-type)
     ubyte[] buffer;

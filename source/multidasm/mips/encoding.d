@@ -1,6 +1,8 @@
 // MIPS32 instruction encoding: R/I/J formats. All words stored big-endian (bits 31–24 first).
 module multidasm.mips.encoding;
 
+package:
+
 /// Append one 32-bit instruction word to buf in big-endian order (bits 31–24 first).
 void appendWord(ref ubyte[] buf, uint w)
 {

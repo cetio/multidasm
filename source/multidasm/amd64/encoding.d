@@ -5,6 +5,8 @@ import multidasm.amd64.types;
 import std.bitmanip : nativeToLittleEndian;
 import std.traits;
 
+package:
+
 // Used for generating instructions with directly encoded registers.
 enum ENCODED = 1 << 0;
 enum INT = 1 << 6;
@@ -21,7 +23,7 @@ enum M38 = 2;
 enum M3A = 3;
 enum MMSR = 7;
 
-package enum Mode
+enum Mode
 {
     Memory,
     MemoryOffset8,
@@ -29,7 +31,7 @@ package enum Mode
     Register
 }
 
-package ubyte[] generateModRM(ubyte OP, SRC, DST)(SRC src, DST dst)
+ubyte[] generateModRM(ubyte OP, SRC, DST)(SRC src, DST dst)
     if (isInstanceOf!(Mem, SRC) && isInstanceOf!(Reg, DST))
 {
     // RIP-relative (64-bit): mod=00, r/m=101, then disp32 only.
@@ -51,19 +53,19 @@ package ubyte[] generateModRM(ubyte OP, SRC, DST)(SRC src, DST dst)
     }
 }
 
-package ubyte[] generateModRM(ubyte OP, SRC, DST)(SRC src, DST dst, Mode mod = Mode.Register)
+ubyte[] generateModRM(ubyte OP, SRC, DST)(SRC src, DST dst, Mode mod = Mode.Register)
     if (isInstanceOf!(Reg, SRC) && isInstanceOf!(Reg, DST))
 {
     return [cast(ubyte)((src.index % 8) | (((dst.index % 8) | OP) << 3) | (cast(ubyte)mod << 6))];
 }
 
-package ubyte[] generateModRM(ubyte OP, SRC, DST)(SRC src, DST dst)
+ubyte[] generateModRM(ubyte OP, SRC, DST)(SRC src, DST dst)
     if (isInstanceOf!(Mem, SRC) && isInstanceOf!(Mem, DST))
 {
     return generateModRM!OP(Reg!(TemplateArgsOf!(DST))(dst.register), Reg!(TemplateArgsOf!(SRC))(src.register));
 }
 
-package ubyte[] generateModRM(ubyte OP, SRC, DST)(SRC src, DST dst)
+ubyte[] generateModRM(ubyte OP, SRC, DST)(SRC src, DST dst)
     if (isInstanceOf!(Reg, SRC) && isInstanceOf!(Mem, DST))
 {
     return generateModRM!OP(dst, src);

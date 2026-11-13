@@ -254,7 +254,6 @@ public:
 struct Block
 {
 package:
-final:
     ptrdiff_t[string] labels;
     Tuple!(size_t, string, string)[] branches;  // operand start, label, "rel1"|"rel4"
     Tuple!(size_t, size_t, string[])[] switches; // opcode start, count, target labels

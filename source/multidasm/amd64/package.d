@@ -11,7 +11,6 @@ import std.typecons;
 struct Block(bool X64)
 {
 package:
-final:
     Tuple!(ptrdiff_t, size_t)[string] labels;
     Tuple!(ptrdiff_t, string, string, bool)[] branches;
     ubyte[] buffer;

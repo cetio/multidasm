@@ -7,18 +7,16 @@ import std.traits;
 enum valid(T, short SIZE) = is(T == Reg!SIZE) || is(T == Mem!SIZE);
 enum valid(T, short RS, short AS) = is(T == Reg!RS) || is(T == Mem!AS);
 
-public struct Reg(short SIZE)
+struct Reg(short SIZE)
 {
 public:
-final:
     ubyte index;
     bool extended;
 }
 
-public struct Mem(short SIZE)
+struct Mem(short SIZE)
 {
 public:
-final:
     short size;
     ubyte register;
     uint offset;

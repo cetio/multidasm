@@ -4,7 +4,7 @@ module multidasm.mips.types;
 import multidasm.exception;
 
 /// 5-bit general-purpose register (0–31).
-public struct GPR
+struct GPR
 {
     ubyte index;
     this(ubyte i)
@@ -16,7 +16,7 @@ public struct GPR
 }
 
 /// Memory operand for load/store: base register + 16-bit signed offset.
-public struct Mem
+struct Mem
 {
     GPR base;
     short offset;
@@ -30,7 +30,6 @@ public struct Mem
     }
 }
 
-public:
 enum rzero = GPR(0);
 enum rat   = GPR(1);
 enum rv0   = GPR(2);
