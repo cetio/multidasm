@@ -69,11 +69,47 @@ unittest
 @Name("implements the AX form of fstsw")
 unittest
 {
-    __traits(compiles, { Block!true block; block.fstsw(ax); }).should == true;
+    enum encoded = {
+        Block!true block;
+        with (block)
+        {
+            fstsw(ax);
+            fstsw();
+        }
+        return block.finalize();
+    }();
+
+    encoded.should == [
+        0x9b, 0xdf, 0xe0,
+        0x9b, 0xdf, 0xe0
+    ];
+
+    __traits(compiles, {
+        enum invalid = {
+            Block!true block;
+            block.fstsw(cx);
+            return block.finalize();
+        }();
+    }).should == false;
 }
 
 @Name("implements the implied-operand form of faddp")
 unittest
 {
-    __traits(compiles, { Block!true block; block.faddp(); }).should == true;
+    enum encoded = {
+        Block!true block;
+        with (block)
+        {
+            faddp();
+            faddp(st1);
+            faddp(st0);
+        }
+        return block.finalize();
+    }();
+
+    encoded.should == [
+        0xde, 0xc1,
+        0xde, 0xc1,
+        0xde, 0xc0
+    ];
 }

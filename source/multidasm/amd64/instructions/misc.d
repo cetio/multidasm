@@ -692,6 +692,7 @@
     /// www.felixcloutier.com/x86/fadd:faddp:fiadd
     @("st")
     auto faddp(ST dst) => emit!(0, ENCODED)(0xde, 0xc0, dst);
+    auto faddp() => faddp(st1);
     /// www.felixcloutier.com/x86/fadd:faddp:fiadd
     @("m16")
     auto fiadd(Mem!16 dst) => emit!(0, NO_REX)(0xde, dst);
@@ -849,6 +850,11 @@
     /// www.felixcloutier.com/x86/fstsw:fnstsw
     @("m16")
     auto fstsw(Mem!16 dst) => emit!(7, NO_REX)(0x9b, 0xdd, dst);
+    auto fstsw(R16 dst)
+    {
+        assert(dst.index == 0, "FSTSW register form requires AX");
+        return fstsw();
+    }
     auto fstsw() => emit!0(0x9b, 0xdf, 0xe0);
     @("m16")
     auto fnstsw(Mem!16 dst) => emit!(7, NO_REX)(0xdd, dst);
