@@ -17,15 +17,15 @@ This builds the library without enabling unit tests.
 ## Running Tests
 
 ```sh
-dub run --config=test-amd64
-dub run --config=test-mips
-dub run --config=test-cil
+dub test -c amd64
+dub test -c mips
+dub test -c cil
 ```
 
 Pass a unit-threaded test name after `--` to filter a run:
 
 ```sh
-dub run --config=test-amd64 -- tests.amd64.arithmetic
+dub test -c amd64 -- tests.amd64.arithmetic
 ```
 
 ## Known Defects
