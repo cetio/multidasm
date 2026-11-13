@@ -2,6 +2,7 @@
 module multidasm.amd64;
 
 public import multidasm.amd64.types;
+import multidasm.exception;
 import multidasm.amd64.encoding;
 import std.bitmanip : nativeToLittleEndian;
 import std.traits;
@@ -497,13 +498,16 @@ public:
             changed = false;
             foreach (index, branch; branches)
             {
-                assert(branch[1] in labels, "Branch label not defined: "~branch[1]);
+                if (branch[1] !in labels)
+                    throw new NoSuchLabelException(branch[1]);
                 immutable ptrdiff_t relative = labelPosition(branch[1]) - branchPosition(index) - branchSize(index);
 
                 if (branchWidths[index] == 1 && (relative < byte.min || relative > byte.max))
                 {
                     immutable string key = branch[2]~'4';
-                    assert(key in branchMap, "Branch offset out of range: "~branch[2]);
+                    if (key !in branchMap)
+                        throw new OutOfRangeException("'"~branch[2]~"' offset",
+                            relative, byte.min, byte.max);
                     branchWidths[index] = 4;
                     changed = true;
                 }
@@ -516,7 +520,8 @@ public:
         {
             immutable size_t position = cast(size_t)branch[0] + inserted;
             immutable ptrdiff_t relative = labelPosition(branch[1]) - cast(ptrdiff_t)position - branchSize(index);
-            assert(relative >= int.min && relative <= int.max, "Branch offset out of range: "~branch[2]);
+            if (relative < int.min || relative > int.max)
+                throw new OutOfRangeException("'"~branch[2]~"' offset", relative, int.min, int.max);
             immutable string key = branch[2]~cast(char)('0' + branchWidths[index]);
             ubyte[] encoded = branchMap[key].dup;
             encoded ~= nativeToLittleEndian(relative)[0..branchWidths[index]];

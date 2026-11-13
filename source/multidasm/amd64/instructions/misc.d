@@ -687,7 +687,7 @@
         else if (src.index == 0)
             emit!(0, ENCODED)(0xdc, 0xc0, dst);
         else
-            assert(0, "Cannot encode 'fadd' with no 'st0' operand!");
+            throw new InvalidOperandException("Cannot encode 'fadd' with no 'st0' operand");
     }
     /// www.felixcloutier.com/x86/fadd:faddp:fiadd
     @("st")
@@ -852,7 +852,8 @@
     auto fstsw(Mem!16 dst) => emit!(7, NO_REX)(0x9b, 0xdd, dst);
     auto fstsw(R16 dst)
     {
-        assert(dst.index == 0, "FSTSW register form requires AX");
+        if (dst.index != 0)
+            throw new InvalidOperandException("FSTSW register form requires AX");
         return fstsw();
     }
     auto fstsw() => emit!0(0x9b, 0xdf, 0xe0);
@@ -908,7 +909,7 @@
         else if (src.index == 0)
             emit!(0, ENCODED)(0xdc, 0xf8, dst);
         else
-            assert(0, "Cannot encode 'fdiv' with no 'st0' operand!");
+            throw new InvalidOperandException("Cannot encode 'fdiv' with no 'st0' operand");
     }
     /// www.felixcloutier.com/x86/fdiv:fdivp:fidiv
     @("st")
@@ -931,7 +932,7 @@
         else if (src.index == 0)
             emit!(0, ENCODED)(0xdc, 0xf0, dst);
         else
-            assert(0, "Cannot encode 'fdivr' with no 'st0' operand!");
+            throw new InvalidOperandException("Cannot encode 'fdivr' with no 'st0' operand");
     }
     /// www.felixcloutier.com/x86/fdiv:fdivp:fidiv
     @("st")
@@ -1010,7 +1011,7 @@
         else if (src.index == 0)
             emit!(0, ENCODED)(0xdc, 0xc8, dst);
         else
-            assert(0, "Cannot encode 'fmul' with no 'st0' operand!");
+            throw new InvalidOperandException("Cannot encode 'fmul' with no 'st0' operand");
     }
     /// www.felixcloutier.com/x86/fdiv:fdivp:fidiv
     @("st")
@@ -1034,7 +1035,7 @@
         else if (src.index == 0)
             emit!(0, ENCODED)(0xdc, 0xe8, dst);
         else
-            assert(0, "Cannot encode 'fsub' with no 'st0' operand!");
+            throw new InvalidOperandException("Cannot encode 'fsub' with no 'st0' operand");
     }
     /// www.felixcloutier.com/x86/fsub:fsubp:fisub
     @("st")
@@ -1058,7 +1059,7 @@
         else if (src.index == 0)
             emit!(0, ENCODED)(0xdc, 0xe0, dst);
         else
-            assert(0, "Cannot encode 'fsubr' with no 'st0' operand!");
+            throw new InvalidOperandException("Cannot encode 'fsubr' with no 'st0' operand");
     }
     /// www.felixcloutier.com/x86/fsubr:fsubrp:fisubr
     @("st")

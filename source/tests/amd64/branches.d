@@ -2,8 +2,8 @@
 module tests.amd64.branches;
 
 import multidasm.amd64;
+import multidasm.exception;
 
-import core.exception : AssertError;
 import unit_threaded;
 
 @Name("resolves forward and backward branches")
@@ -214,7 +214,7 @@ unittest
 {
     Block!true missing;
     missing.jne("missing");
-    missing.finalize().shouldThrow!AssertError;
+    missing.finalize().shouldThrow!NoSuchLabelException;
 
     static foreach (mnemonic; ["loop", "loope", "loopne", "jcxz", "jecxz", "jrcxz"])
     {
@@ -224,7 +224,7 @@ unittest
             foreach (_; 0..128)
                 block.nop();
             block.label("far");
-            block.finalize().shouldThrow!AssertError;
+            block.finalize().shouldThrow!OutOfRangeException;
         }
     }
 }

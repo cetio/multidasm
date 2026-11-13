@@ -3,6 +3,7 @@
 module multidasm.mips;
 
 public import multidasm.mips.types;
+import multidasm.exception;
 import multidasm.mips.encoding;
 import std.typecons;
 
@@ -214,7 +215,8 @@ public:
             immutable kind = br[2];
             immutable rs = br[3];
             immutable rt = br[4];
-            assert(name in labels, "Branch/jump label not defined: "~name);
+            if (name !in labels)
+                throw new NoSuchLabelException(name);
             immutable target = labels[name];
 
             if (kind == "j" || kind == "jal")
@@ -227,7 +229,8 @@ public:
             {
                 immutable diff = cast(ptrdiff_t)target - cast(ptrdiff_t)(pos + 4);
                 immutable offsetWords = diff / 4;
-                assert(offsetWords >= -32_768 && offsetWords <= 32_767, "Branch offset out of range");
+                if (offsetWords < -32_768 || offsetWords > 32_767)
+                    throw new OutOfRangeException("Branch offset", offsetWords, -32_768, 32_767);
                 immutable short imm16 = cast(short)offsetWords;
                 uint w;
                 switch (kind)

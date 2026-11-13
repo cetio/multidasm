@@ -1,11 +1,18 @@
 // Types and register aliases for multidasm.mips (MIPS32 integer core; GPR, Mem, rzero–rra).
 module multidasm.mips.types;
 
+import multidasm.exception;
+
 /// 5-bit general-purpose register (0–31).
 public struct GPR
 {
     ubyte index;
-    this(ubyte i) { assert(i < 32); index = i; }
+    this(ubyte i)
+    {
+        if (i >= 32)
+            throw new OutOfRangeException("Register index", i, 0, 31);
+        index = i;
+    }
 }
 
 /// Memory operand for load/store: base register + 16-bit signed offset.
@@ -14,7 +21,13 @@ public struct Mem
     GPR base;
     short offset;
     this(GPR b, short o) { base = b; offset = o; }
-    this(GPR b, int o) { base = b; offset = cast(short)o; assert(o >= short.min && o <= short.max); }
+    this(GPR b, int o)
+    {
+        if (o < short.min || o > short.max)
+            throw new OutOfRangeException("Memory offset", o, short.min, short.max);
+        base = b;
+        offset = cast(short)o;
+    }
 }
 
 public:

@@ -2,6 +2,7 @@
 // Reference: https://github.com/cetio/cilk/blob/master/cilk/cilk.d
 module multidasm.cil;
 
+import multidasm.exception;
 import std.array;
 import std.bitmanip : nativeToLittleEndian;
 import std.conv;
@@ -264,7 +265,8 @@ final:
     {
         buffer ~= pendingPrefix;
         pendingPrefix = null;
-        assert(mnemonic in instructions, "Unknown CIL mnemonic: "~mnemonic);
+        if (mnemonic !in instructions)
+            throw new UnknownMnemonicException(mnemonic);
         buffer ~= instructions[mnemonic];
         return instructions[mnemonic].length;
     }
@@ -287,13 +289,15 @@ public:
             immutable pos = br[0];
             immutable name = br[1];
             immutable kind = br[2];
-            assert(name in labels, "Branch label not defined: "~name);
+            if (name !in labels)
+                throw new NoSuchLabelException(name);
             immutable target = labels[name];
             immutable nextInstr = pos + (kind == "rel1" ? 1 : 4);
             immutable offset = cast(int)(target - nextInstr);
             if (kind == "rel1")
             {
-                assert(offset >= byte.min && offset <= byte.max, "Short branch offset out of range");
+                if (offset < byte.min || offset > byte.max)
+                    throw new OutOfRangeException("Short branch offset", offset, byte.min, byte.max);
                 putByte(pos, cast(byte)offset);
             }
             else
@@ -310,7 +314,8 @@ public:
             immutable nextInstr = opcodeStart + 1 + uint.sizeof + n * int.sizeof;
             foreach (i, name; targetNames)
             {
-                assert(name in labels, "Switch target label not defined: "~name);
+                if (name !in labels)
+                    throw new NoSuchLabelException(name);
                 immutable offset = cast(int)(labels[name] - nextInstr);
                 putInt(opcodeStart + 1 + uint.sizeof + i * int.sizeof, offset);
             }

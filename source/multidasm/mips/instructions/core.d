@@ -82,6 +82,7 @@
     @("code")
     auto break_(uint code)
     {
-        assert(code <= 0x3FF, "Break code out of range");
+        if (code > 0x3FF)
+            throw new OutOfRangeException("Break code", code, 0, 0x3FF);
         return emit((cast(uint).special << 26) | (code << 16) | (cast(uint).brk & 63));
     }
