@@ -480,11 +480,11 @@
     /// www.felixcloutier.com/x86/ret
     auto ret() => emit!0(0xc3);
     @("imm16")
-    auto ret(ushort imm16) => emit!0(0xc2, imm16);
+    auto ret(ushort imm16) => emit!0(0xc2, cast(ubyte)imm16, cast(ubyte)(imm16 >> 8));
     /// www.felixcloutier.com/x86/ret
     auto retf() => emit!0(0xcb);
     @("imm16")
-    auto retf(ushort imm16) => emit!0(0xca, imm16);
+    auto retf(ushort imm16) => emit!0(0xca, cast(ubyte)imm16, cast(ubyte)(imm16 >> 8));
 
     /// www.felixcloutier.com/x86/stc
     auto stc() => emit!0(0xf9);
@@ -1721,4 +1721,3 @@
     /// www.felixcloutier.com/x86/setcc
     @("rm8")
     auto setz(RM)(RM dst) if (valid!(RM, 8)) => emit!0(0x0f, 0x94, dst);
-

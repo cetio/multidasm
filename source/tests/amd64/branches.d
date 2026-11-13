@@ -192,3 +192,35 @@ unittest
 
     encoded.should == [0xc2, 0x10, 0x00];
 }
+
+@Name("preserves return stack adjustments without changing operand size")
+unittest
+{
+    static foreach (X64; [false, true])
+    {
+        {
+            enum encoded = {
+                Block!X64 block;
+                with (block)
+                {
+                    ret();
+                    ret(0);
+                    ret(0x1234);
+                    retf();
+                    retf(0);
+                    retf(0xffff);
+                }
+                return block.finalize();
+            }();
+
+            encoded.should == [
+                0xc3,
+                0xc2, 0x00, 0x00,
+                0xc2, 0x34, 0x12,
+                0xcb,
+                0xca, 0x00, 0x00,
+                0xca, 0xff, 0xff
+            ];
+        }
+    }
+}
